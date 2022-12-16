@@ -25,8 +25,8 @@ github.com/multiformats/go-varint v0.0.5/go.mod h1:3Ls8CIEsrijN6+B7PbrXRPxHRPuXS
 github.com/multiformats/go-varint v0.0.6 h1:gk85QWKxh3TazbLxED/NlDVv8+q+ReFJk7Y2W/KhfNY=
 github.com/multiformats/go-varint v0.0.6/go.mod h1:3Ls8CIEsrijN6+B7PbrXRPxHRPuXSrVKRY101jdMZYE=
 github.com/spaolacci/murmur3 v1.1.0/go.mod h1:JwIasOWyU6f++ZhiEuf87xNszmSA2myDM2Kzu9HwQUA=
-github.com/taubyte/go-sdk-symbols v0.0.15 h1:SlgAOqR/C8rAuZ4XpLUZ20TEty20vKcJ2x021bN7UbI=
-github.com/taubyte/go-sdk-symbols v0.0.15/go.mod h1:eJacVG/u5GF9M6YNV9u2OHheRqPU8UV1jG370Fki05Y=
+github.com/taubyte/go-sdk-symbols v0.0.16 h1:s2ZR9U+ZDPebXRbsNDZFqbYNUsOxfZtnAVHkbI1oEFA=
+github.com/taubyte/go-sdk-symbols v0.0.16/go.mod h1:aaLvDq/dtRyPyNoAOcKH85GjYqAZDC3ZFrSUS3TKum8=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20190611184440-5c40567a22f8/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=
 golang.org/x/crypto v0.0.0-20210220033148-5ea612d1eb83/go.mod h1:jdWPYTVW3xRLrWPugEBEK3UY2ZEsg3UU495nc5E+M+I=
