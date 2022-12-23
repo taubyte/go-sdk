@@ -19,7 +19,7 @@ func New(data []byte, readCloser bool) (id uint32, closer io.Closer, err error) 
 
 	err0 := symbols.MemoryViewNew(&data[0], uint32(len(data)), closable, &id)
 	if err0 != 0 {
-		return 0, nil, fmt.Errorf("creating new memory view failed with: %s", err)
+		return 0, nil, fmt.Errorf("creating new memory view failed with: %s", err0)
 	}
 
 	return id, &memoryView{id: id}, nil
