@@ -162,7 +162,7 @@ func TestClose(t *testing.T) {
 	symbols.MockClose(true)
 
 	if err := mv.Close(); err != nil {
-		t.Errorf("closing memory viewfailed with: %s", err)
+		t.Errorf("closing memory view failed with: %s", err)
 		return
 	}
 

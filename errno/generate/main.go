@@ -13,6 +13,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
 	readFile, err := os.Open(path.Join(wd, "types.go"))
 	if err != nil {
 		panic(err)

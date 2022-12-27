@@ -29,7 +29,7 @@ func (m *memoryView) Size() uint32 {
 
 func (m *memoryView) Read(p []byte) (int, error) {
 	var n uint32
-	if p == nil || len(p) == 0 {
+	if len(p) == 0 {
 		return 0, fmt.Errorf("Cannot read to nil bytes")
 	}
 
