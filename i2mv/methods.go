@@ -1,6 +1,7 @@
 package i2mv
 
 import (
+	"errors"
 	"fmt"
 	"io"
 
@@ -56,7 +57,7 @@ func (m *memoryView) Seek(offSet int64, whence int) (int64, error) {
 	}
 
 	if _offSet := _whence + offSet; _offSet < 0 {
-		return 0, fmt.Errorf("cannot seek before start")
+		return 0, errors.New("cannot seek before start")
 	} else if _offSet > int64(m.size) {
 		m.offset = int64(m.size)
 		return m.offset, io.EOF
