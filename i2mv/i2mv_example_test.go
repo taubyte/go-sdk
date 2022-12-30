@@ -20,6 +20,7 @@ func ExampleNew() {
 
 	id, mvCloser, err = i2mv.New([]byte{1, 2, 3}, true)
 	if err != nil {
+		fmt.Printf("New memory view failed with: failed with: %s\n", err)
 		return
 	}
 
@@ -33,6 +34,7 @@ func ExampleOpen() {
 
 	mv, err := i2mv.Open(0)
 	if err != nil {
+		fmt.Printf("Open failed with: %s\n", err)
 		return
 	}
 
@@ -47,13 +49,20 @@ func ExampleMemoryView_Read() {
 
 	mv, err := i2mv.Open(1)
 	if err != nil {
+		fmt.Printf("Open failed with: %s\n", err)
 		return
 	}
 
 	data := make([]byte, 5)
 	n, err = mv.Read(data)
 	if err != nil {
+		fmt.Printf("Read failed with: %s\n", err)
 		return
+	}
+
+	n, err = mv.Read(data)
+	if err != io.EOF {
+		fmt.Printf("Expected error `%s` got `%s`", io.EOF, err)
 	}
 
 	fmt.Println("success")
@@ -66,11 +75,13 @@ func ExampleMemoryView_Seek() {
 
 	mv, err := i2mv.Open(1)
 	if err != nil {
+		fmt.Printf("Open failed with: %s\n", err)
 		return
 	}
 
 	offset, err = mv.Seek(3, io.SeekCurrent)
 	if err != nil {
+		fmt.Printf("Seek failed with: %s\n", err)
 		return
 	}
 
@@ -85,11 +96,13 @@ func ExampleMemoryView_Close() {
 
 	mv, err := i2mv.Open(1)
 	if err != nil {
+		fmt.Printf("Open failed with: %s\n", err)
 		return
 	}
 
 	err = mv.Close()
 	if err != nil {
+		fmt.Printf("Close failed with: %s\n", err)
 		return
 	}
 

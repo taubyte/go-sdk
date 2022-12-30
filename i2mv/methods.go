@@ -34,6 +34,10 @@ func (m *memoryView) Read(p []byte) (int, error) {
 		return 0, fmt.Errorf("Cannot read to nil bytes")
 	}
 
+	if m.offset >= int64(m.size) {
+		return 0, io.EOF
+	}
+
 	err := symbols.MemoryViewRead(m.id, uint32(m.offset), uint32(len(p)), &p[0], &n)
 	if err != 0 {
 		return 0, fmt.Errorf("reading memory view failed with: %s", err)
