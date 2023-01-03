@@ -2,7 +2,6 @@ package event
 
 import (
 	"fmt"
-	"net/http"
 
 	eventSym "github.com/taubyte/go-sdk-symbols/event"
 )
@@ -26,9 +25,9 @@ func (e HttpEvent) Redirect(url string) httpRedirect {
 }
 
 func (r httpRedirect) Temporary() error {
-	return r.redirect(http.StatusTemporaryRedirect)
+	return r.redirect(307)
 }
 
 func (r httpRedirect) Permanent() error {
-	return r.redirect(http.StatusPermanentRedirect)
+	return r.redirect(308)
 }
