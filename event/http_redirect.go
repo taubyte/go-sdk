@@ -31,3 +31,7 @@ func (r httpRedirect) Temporary() error {
 func (r httpRedirect) Permanent() error {
 	return r.redirect(308)
 }
+
+func (r httpRedirect) Code(code uint32) error {
+	return r.redirect(code)
+}
