@@ -2,7 +2,6 @@ package utils
 
 import (
 	"bytes"
-	"fmt"
 	"math/big"
 	"testing"
 
@@ -89,17 +88,47 @@ func TestEncodingByteSliceSlice(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	fmt.Println(encoded)
+
 	var new_fruits [][]byte
 	err = codec.Convert(encoded).To(&new_fruits)
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	fmt.Println(new_fruits)
+
 	for idx, fruit := range fruits {
 		if bytes.Compare(fruit, new_fruits[idx]) != 0 {
 			t.Errorf("`%v` != `%v`", new_fruits[idx], fruit)
+			return
+		}
+	}
+}
+
+func TestEncodingMapStringString(t *testing.T) {
+	fruits := map[string]string{
+		"top": "mango",
+		"mid": "orange",
+		"bad": "banana",
+	}
+	var encoded []byte
+	err := codec.Convert(fruits).To(&encoded)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	var newFruits map[string]string
+	err = codec.Convert(encoded).To(&newFruits)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if len(newFruits) != len(fruits) {
+		t.Errorf("Expected new fruits size `%d` to be same as fruits size `%d`", len(newFruits), len(fruits))
+		return
+	}
+	for idx, fruit := range newFruits {
+		if fruits[idx] != fruit {
+			t.Errorf("`%v` != `%v`", fruits[idx], fruit)
 			return
 		}
 	}

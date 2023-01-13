@@ -100,6 +100,9 @@ const (
 	ErrorEthereumSignFailed
 	ErrorEthereumInvalidPublicKey
 	ErrorEthereumRecoverPubKeyFailed
+	ErrorEthereumSiweEIP191InitMessageFailed
+	ErrorEthereumSiweParseMessageFailed
+	ErrorEthereumSiweEIP191VerifyFailed
 	ErrorSizeMismatch
 	ErrorStorageGetMetaFailed
 	ErrorAddFileToIpfsFailed
