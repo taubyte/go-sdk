@@ -92,7 +92,7 @@ func ExampleContractMethod_Transact() {
 
 	chainId := big.NewInt(10)
 
-	tx, err = fakeMethod.Transact(chainId, "privateKey", big.NewInt(5))
+	tx, err = fakeMethod.Transact(chainId, []byte("private_key"), big.NewInt(5))
 	if err != nil {
 		return
 	}

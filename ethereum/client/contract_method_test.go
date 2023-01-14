@@ -38,7 +38,7 @@ func TestContractMethod(t *testing.T) {
 	rand.Read(byteCode)
 	_byteCode := bytes.NewReader(byteCode)
 
-	contract, _, err := client.DeployContract(reader, _byteCode, testChain, testString)
+	contract, _, err := client.DeployContract(reader, _byteCode, testChain, testBytes)
 	if err != nil {
 		t.Errorf("Deploying contract failed with: %s", err)
 		return
@@ -93,7 +93,7 @@ func TestInputParams(t *testing.T) {
 	rand.Read(byteCode)
 	_byteCode := bytes.NewReader(byteCode)
 
-	contract, _, err := client.DeployContract(reader, _byteCode, testChain, testString)
+	contract, _, err := client.DeployContract(reader, _byteCode, testChain, testBytes)
 	if err != nil {
 		t.Errorf("Deploying contract failed with: %s", err)
 		return
@@ -170,7 +170,7 @@ func TestContractTransact(t *testing.T) {
 	rand.Read(byteCode)
 	_byteCode := bytes.NewReader(byteCode)
 
-	contract, _, err := client.DeployContract(reader, _byteCode, testChain, testString)
+	contract, _, err := client.DeployContract(reader, _byteCode, testChain, testBytes)
 	if err != nil {
 		t.Errorf("Deploying contract failed with: %s", err)
 		return
@@ -184,7 +184,7 @@ func TestContractTransact(t *testing.T) {
 
 	ethereumSym.MockTransactContract(testClientId, testTransactionId)
 
-	tx, err := contractMethod.Transact(testChain, testString, testPassingInput)
+	tx, err := contractMethod.Transact(testChain, testBytes, testPassingInput)
 	if err != nil {
 		t.Errorf("Calling contract method transaction failed with: %s", err)
 		return
@@ -197,25 +197,25 @@ func TestContractTransact(t *testing.T) {
 
 	ethereumSym.MockTransactContract(testClientId+10, testTransactionId)
 
-	_, err = contractMethod.Transact(testChain, testString, testPassingInput)
+	_, err = contractMethod.Transact(testChain, testBytes, testPassingInput)
 	if err == nil {
 		t.Error("Expected error")
 		return
 	}
 
-	_, err = contractMethod.Transact(testChain, testString, testString)
+	_, err = contractMethod.Transact(testChain, testBytes, testString)
 	if err == nil {
 		t.Error("Expected error")
 		return
 	}
 
-	_, err = contractMethod.Transact(nil, testString, testString)
+	_, err = contractMethod.Transact(nil, testBytes, testString)
 	if err == nil {
 		t.Error("Expected error")
 		return
 	}
 
-	_, err = contractMethod.Transact(nil, "", testString)
+	_, err = contractMethod.Transact(nil, nil, testString)
 	if err == nil {
 		t.Error("Expected error")
 		return
@@ -251,7 +251,7 @@ func TestCall(t *testing.T) {
 	rand.Read(byteCode)
 	_byteCode := bytes.NewReader(byteCode)
 
-	contract, _, err := client.DeployContract(reader, _byteCode, testChain, testString)
+	contract, _, err := client.DeployContract(reader, _byteCode, testChain, testBytes)
 	if err != nil {
 		t.Errorf("Deploying contract failed with: %s", err)
 		return
