@@ -101,32 +101,3 @@ func ExampleBlock_Number() {
 	fmt.Printf("%d\n", blockNumber)
 	// Output: 20
 }
-
-func ExampleBlock_NonceFromPrivateKey() {
-	// Mocking the calls to the vm for usage in tests and playground
-	mockData := ethereumSym.MockData{
-		Client:        4,
-		BlockByNumber: 5,
-		BlockNumber:   big.NewInt(20),
-		BlockNonce:    6,
-	}
-	mockData.Mock()
-
-	client, err := ethereum.New("https://testRPC.url")
-	if err != nil {
-		return
-	}
-
-	block, err := client.BlockByNumber(big.NewInt(20))
-	if err != nil {
-		return
-	}
-
-	nonce, err := block.NonceFromPrivateKey("HexKey")
-	if err != nil {
-		return
-	}
-
-	fmt.Printf("%d\n", nonce)
-	// Output: 6
-}

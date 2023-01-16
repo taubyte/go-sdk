@@ -99,6 +99,7 @@ const (
 	ErrorEthereumDeployFailed
 	ErrorEthereumSignFailed
 	ErrorEthereumInvalidPublicKey
+	ErrorEthereumInvalidPrivateKey
 	ErrorEthereumRecoverPubKeyFailed
 	ErrorSizeMismatch
 	ErrorStorageGetMetaFailed
@@ -125,5 +126,6 @@ const (
 	ErrorMemoryViewNotFound
 	ErrorMemoryViewNotCloser
 	ErrorSeekMethodNotFound
+	ErrorInvalidBool
 	ErrorCap
 )

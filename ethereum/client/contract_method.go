@@ -61,9 +61,9 @@ func (c *ContractMethod) Call(inputParameters ...interface{}) ([]interface{}, er
 }
 
 // Transact invokes the (paid) contract method with params as input values. If chain id is nil, then current chain Id is used.
-func (c *ContractMethod) Transact(chainId *big.Int, privateKey string, inputParameters ...interface{}) (*Transaction, error) {
+func (c *ContractMethod) Transact(chainId *big.Int, privateKey []byte, inputParameters ...interface{}) (*Transaction, error) {
 	var err error
-	if privateKey == "" {
+	if len(privateKey) == 0 {
 		return nil, fmt.Errorf("Private key cannot be empty")
 	}
 
@@ -82,7 +82,7 @@ func (c *ContractMethod) Transact(chainId *big.Int, privateKey string, inputPara
 		return nil, fmt.Errorf("Handling inputs failed with: %s", err)
 	}
 
-	err0 := ethereumSym.EthTransactContract(uint32(c.client), c.contractId, &chainBytes[0], uint32(len(chainBytes)), c.name, privateKey, &encoded[0], uint32(len(encoded)), &transactionId)
+	err0 := ethereumSym.EthTransactContract(uint32(c.client), c.contractId, &chainBytes[0], uint32(len(chainBytes)), c.name, &privateKey[0], uint32(len(privateKey)), &encoded[0], uint32(len(encoded)), &transactionId)
 	if err0 != 0 {
 		return nil, fmt.Errorf("Transacting contract method `%s` failed with: %s", c.name, err0)
 	}
