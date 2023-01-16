@@ -5,6 +5,8 @@ go 1.18
 // Direct Taubyte imports
 require github.com/taubyte/go-sdk-symbols v0.1.4
 
+replace github.com/taubyte/go-sdk-symbols => ../go-sdk-symbols
+
 // Direct imports
 require (
 	github.com/ipfs/go-cid v0.0.7
@@ -25,3 +27,5 @@ require (
 	github.com/multiformats/go-varint v0.0.6 // indirect
 	golang.org/x/sys v0.1.0 // indirect
 )
+
+require bitbucket.org/taubyte/go-sdk v0.1.43
