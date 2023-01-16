@@ -74,6 +74,11 @@ func TestVerifySignInputs(t *testing.T) {
 		return
 	}
 
+	if err := verifySignInputs(fakeMessage, nil, []byte{1, 2, 3}, true, false); err == nil {
+		t.Error("Expected error")
+		return
+	}
+
 	if err := verifySignInputs(fakeMessage, fakePrivKey, nil, false, true); err == nil {
 		t.Error("Expected error")
 		return
