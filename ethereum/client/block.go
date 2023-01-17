@@ -86,24 +86,3 @@ func (b *Block) Number() (*big.Int, error) {
 
 	return nil, errors.New("Unable to get block number from block")
 }
-
-// NonceFromPrivateKey returns the account nonce of the account given from the secp256k1 hexkey.
-// The block number can be nil, in which case the nonce is taken from the latest known block.
-func (b *Block) NonceFromPrivateKey(hexKey string) (uint64, error) {
-	if hexKey == "" {
-		return 0, fmt.Errorf("Hex key cannot be empty")
-	}
-
-	blockNumber, err := b.Number()
-	if err != nil {
-		return 0, fmt.Errorf("Getting block number failed with: %s", err)
-	}
-
-	blockBuf := blockNumber.Bytes()
-	var nonce uint64
-	if err := ethereumSym.EthNonceFromPrivateKey(uint32(b.client), hexKey, uint32(len(blockBuf)), &blockBuf[0], &nonce); err != 0 {
-		return 0, fmt.Errorf("Getting Nonce from private key failed with: %s", err)
-	}
-
-	return nonce, nil
-}

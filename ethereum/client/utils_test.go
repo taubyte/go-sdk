@@ -13,6 +13,7 @@ import (
 
 var (
 	testString = "test string"
+	testBytes  = []byte("test bytes")
 
 	testTransactionId   uint32
 	testTransactionHash = make([]byte, 32)

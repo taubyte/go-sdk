@@ -99,6 +99,7 @@ const (
 	ErrorEthereumDeployFailed
 	ErrorEthereumSignFailed
 	ErrorEthereumInvalidPublicKey
+	ErrorEthereumInvalidPrivateKey
 	ErrorEthereumRecoverPubKeyFailed
 	ErrorEthereumSiweEIP191InitMessageFailed
 	ErrorEthereumSiweParseMessageFailed
@@ -128,5 +129,6 @@ const (
 	ErrorMemoryViewNotFound
 	ErrorMemoryViewNotCloser
 	ErrorSeekMethodNotFound
+	ErrorInvalidBool
 	ErrorCap
 )

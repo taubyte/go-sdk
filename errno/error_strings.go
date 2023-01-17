@@ -1,4 +1,4 @@
-// This file was generated, do not manually edit.
+// This file was generated, do not manually edit. 
 package errno
 
 var errorStrings = []string{
@@ -89,6 +89,7 @@ var errorStrings = []string{
 	"ErrorEthereumDeployFailed",
 	"ErrorEthereumSignFailed",
 	"ErrorEthereumInvalidPublicKey",
+	"ErrorEthereumInvalidPrivateKey",
 	"ErrorEthereumRecoverPubKeyFailed",
 	"ErrorSizeMismatch",
 	"ErrorStorageGetMetaFailed",
@@ -115,5 +116,6 @@ var errorStrings = []string{
 	"ErrorMemoryViewNotFound",
 	"ErrorMemoryViewNotCloser",
 	"ErrorSeekMethodNotFound",
+	"ErrorInvalidBool",
 	"ErrorCap",
 }

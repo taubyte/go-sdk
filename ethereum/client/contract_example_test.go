@@ -46,7 +46,7 @@ func ExampleClient_DeployContract() {
 
 	chainId := big.NewInt(5)
 
-	contract, tx, err = client.DeployContract(bytes.NewReader(abiRawData), bytes.NewReader(byteCodeData), chainId, "private key")
+	contract, tx, err = client.DeployContract(bytes.NewReader(abiRawData), bytes.NewReader(byteCodeData), chainId, []byte("private key"))
 	if err != nil {
 		return
 	}

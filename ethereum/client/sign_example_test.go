@@ -8,16 +8,18 @@ import (
 )
 
 func ExampleSign() {
+	exampleMessage := []byte("hello world")
+	examplePrivateKey := []byte("fake_private_key")
 	// Mocking the calls to the vm for usage in tests and playground
-	ethereumSym.MockSign("hello world")
-	ethereumSym.MockVerify("hello world", true)
+	ethereumSym.MockSign(exampleMessage)
+	ethereumSym.MockVerify(exampleMessage, true)
 
-	signature, err := ethereum.SignMessage("hello world", "fake_private_key")
+	signature, err := ethereum.SignMessage(exampleMessage, examplePrivateKey)
 	if err != nil {
 		return
 	}
 
-	err = ethereum.VerifySignature("hello world", "fake_private_key", signature)
+	err = ethereum.VerifySignature(exampleMessage, examplePrivateKey, signature)
 	if err != nil {
 		return
 	}

@@ -13,7 +13,7 @@ import (
 
 // DeployContract method deploys the contract on given chain,returns low level contract interface through which calls
 // and transactions may be made through.
-func (c Client) DeployContract(abi, byteCode io.Reader, chainId *big.Int, privateKey string) (*Contract, *Transaction, error) {
+func (c Client) DeployContract(abi, byteCode io.Reader, chainId *big.Int, privateKey []byte) (*Contract, *Transaction, error) {
 	var err error
 	if abi == nil {
 		return nil, nil, fmt.Errorf("ABI is nil")
@@ -21,7 +21,7 @@ func (c Client) DeployContract(abi, byteCode io.Reader, chainId *big.Int, privat
 	if byteCode == nil {
 		return nil, nil, fmt.Errorf("Byte code is nil")
 	}
-	if privateKey == "" {
+	if len(privateKey) == 0 {
 		return nil, nil, fmt.Errorf("Private key is empty")
 	}
 	if chainId == nil {
@@ -47,7 +47,7 @@ func (c Client) DeployContract(abi, byteCode io.Reader, chainId *big.Int, privat
 	var contractId uint32
 	var transactionId uint32
 
-	err0 := ethereumSym.EthDeployContractSize(uint32(c), &chainBytes[0], uint32(len(chainBytes)), string(_byteCode), &abiBytes[0], uint32(len(abiBytes)), privateKey, &address[0], &methodSize, &contractId, &transactionId)
+	err0 := ethereumSym.EthDeployContract(uint32(c), &chainBytes[0], uint32(len(chainBytes)), string(_byteCode), &abiBytes[0], uint32(len(abiBytes)), &privateKey[0], uint32(len(privateKey)), &address[0], &methodSize, &contractId, &transactionId)
 	if err0 != 0 {
 		return nil, nil, fmt.Errorf("Deploying contract failed with: %s", err0)
 	}

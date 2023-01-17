@@ -260,7 +260,7 @@ func TestDeployContract(t *testing.T) {
 	rand.Read(byteCode)
 	_byteCode := bytes.NewReader(byteCode)
 
-	contract, tx, err := client.DeployContract(reader, _byteCode, testChain, testString)
+	contract, tx, err := client.DeployContract(reader, _byteCode, testChain, testBytes)
 	if err != nil {
 		t.Errorf("Deploying contract failed with: %s", err)
 		return
@@ -297,7 +297,7 @@ func TestDeployContract(t *testing.T) {
 
 	_byteCode.Seek(0, io.SeekStart)
 
-	_, _, err = client.DeployContract(reader, _byteCode, testChain, testString)
+	_, _, err = client.DeployContract(reader, _byteCode, testChain, testBytes)
 	if err == nil {
 		t.Error("Expected error")
 		return
@@ -318,7 +318,7 @@ func TestDeployContract(t *testing.T) {
 
 	_byteCode.Seek(0, io.SeekStart)
 
-	_, _, err = client.DeployContract(reader, _byteCode, testChain, testString)
+	_, _, err = client.DeployContract(reader, _byteCode, testChain, testBytes)
 	if err == nil {
 		t.Error("Expected error")
 		return
@@ -328,7 +328,7 @@ func TestDeployContract(t *testing.T) {
 
 	_byteCode.Seek(0, io.SeekStart)
 
-	_, _, err = client.DeployContract(reader, _byteCode, testChain, testString)
+	_, _, err = client.DeployContract(reader, _byteCode, testChain, testBytes)
 	if err == nil {
 		t.Error("Expected error")
 		return
@@ -353,7 +353,7 @@ func TestDeployContract(t *testing.T) {
 		return
 	}
 
-	_, _, err = client.DeployContract(reader, reader2, testChain, testString)
+	_, _, err = client.DeployContract(reader, reader2, testChain, testBytes)
 	if err == nil {
 		t.Error("Expected error")
 		return
@@ -367,13 +367,13 @@ func TestDeployContract(t *testing.T) {
 
 	reader2.Close()
 
-	_, _, err = client.DeployContract(reader, reader2, testChain, testString)
+	_, _, err = client.DeployContract(reader, reader2, testChain, testBytes)
 	if err == nil {
 		t.Error("Expected error")
 		return
 	}
 
-	_, _, err = client.DeployContract(nil, _byteCode, testChain, testString)
+	_, _, err = client.DeployContract(nil, _byteCode, testChain, testBytes)
 	if err == nil {
 		t.Error("Expected error")
 		return
@@ -381,7 +381,7 @@ func TestDeployContract(t *testing.T) {
 
 	_byteCode.Seek(0, io.SeekStart)
 
-	_, _, err = client.DeployContract(reader, _byteCode, nil, testString)
+	_, _, err = client.DeployContract(reader, _byteCode, nil, testBytes)
 	if err == nil {
 		t.Error("Expected error")
 		return
@@ -395,7 +395,7 @@ func TestDeployContract(t *testing.T) {
 
 	_byteCode.Seek(0, io.SeekStart)
 
-	_, _, err = client.DeployContract(reader, _byteCode, nil, testString)
+	_, _, err = client.DeployContract(reader, _byteCode, nil, testBytes)
 	if err == nil {
 		t.Error("Expected error")
 		return
@@ -403,13 +403,13 @@ func TestDeployContract(t *testing.T) {
 
 	_byteCode.Seek(0, io.SeekStart)
 
-	_, _, err = client.DeployContract(reader, _byteCode, nil, "")
+	_, _, err = client.DeployContract(reader, _byteCode, nil, nil)
 	if err == nil {
 		t.Error("Expected error")
 		return
 	}
 
-	_, _, err = client.DeployContract(reader, nil, nil, "")
+	_, _, err = client.DeployContract(reader, nil, nil, nil)
 	if err == nil {
 		t.Error("Expected error")
 		return
