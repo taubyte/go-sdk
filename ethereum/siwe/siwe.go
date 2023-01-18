@@ -3,8 +3,8 @@ package siwe
 import (
 	"fmt"
 
-	"bitbucket.org/taubyte/go-sdk/utils/codec"
 	symbols "github.com/taubyte/go-sdk-symbols/ethereum/siwe"
+	"github.com/taubyte/go-sdk/utils/codec"
 )
 
 func InitMessage(domain, uri, address, nonce string, options map[string]string) (string, error) {
