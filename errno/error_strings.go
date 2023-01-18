@@ -1,4 +1,4 @@
-// This file was generated, do not manually edit. 
+// This file was generated, do not manually edit.
 package errno
 
 var errorStrings = []string{
