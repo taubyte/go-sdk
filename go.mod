@@ -27,5 +27,3 @@ require (
 	github.com/multiformats/go-varint v0.0.6 // indirect
 	golang.org/x/sys v0.1.0 // indirect
 )
-
-require bitbucket.org/taubyte/go-sdk v0.1.43
