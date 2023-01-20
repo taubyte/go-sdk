@@ -34,8 +34,8 @@ func InitMessage(domain, uri, address, nonce string, options map[string]string) 
 	}
 	return string(messageBytes), nil
 }
-func VerifyEIP191(message, signature string) error {
-	err := symbols.SiweVerifyEIP191(message, signature)
+func VerifyEIP191(message string, signature []byte) error {
+	err := symbols.SiweVerifyEIP191(message, &signature[0], uint32(len(signature)))
 	if err != 0 {
 		return fmt.Errorf("Verifying signature failed with: %s", err)
 	}
