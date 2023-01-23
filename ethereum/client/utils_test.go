@@ -30,7 +30,6 @@ var (
 	testChain = big.NewInt(rand.Int63())
 
 	testRpcUrl          = "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
-	testAddress         = "0xB36046FfB1587e0Cde7FD79Db09a5E0410697368"
 	testAddressBytes, _ = bytes.AddressFromHex(testAddress)
 
 	testContractId         uint32
@@ -45,6 +44,9 @@ var (
 	testPassingOutput uint32
 
 	testContract ethereumSym.MockContract
+
+	testPrivateKeyHex = "91e4a13e5a30ad353cdf5ea7bb909dfdf967122e3b43e331ad947b68a3899b2c"
+	testAddress       = "0x3b8C3C867B2bc1AEb6ea2f565C82F27116c3c54E"
 )
 
 func setTestVars() error {

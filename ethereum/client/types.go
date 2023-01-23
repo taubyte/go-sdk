@@ -60,3 +60,5 @@ type abi struct {
 	inputs  []string
 	outputs []string
 }
+
+type Address [AddressByteLength]byte
