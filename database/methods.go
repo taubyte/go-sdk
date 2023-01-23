@@ -45,7 +45,7 @@ func (d Database) Get(key string) ([]byte, error) {
 }
 
 // Delete removes an entry from the database
-// Retuns an error
+// Returns an error
 func (d Database) Delete(key string) error {
 	err := databaseSym.DatabaseDelete(uint32(d), key)
 	if err != 0 {
