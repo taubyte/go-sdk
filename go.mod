@@ -3,7 +3,7 @@ module github.com/taubyte/go-sdk
 go 1.18
 
 // Direct Taubyte imports
-require github.com/taubyte/go-sdk-symbols v0.1.5
+require github.com/taubyte/go-sdk-symbols v0.1.7
 
 // Direct imports
 require (
@@ -11,8 +11,6 @@ require (
 	golang.org/x/crypto v0.1.0
 	golang.org/x/exp v0.0.0-20221026153819-32f3d567a233
 )
-
-replace github.com/taubyte/go-sdk-symbols => ../go-sdk-symbols
 
 // Indirect imports
 require (
