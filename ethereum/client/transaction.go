@@ -161,7 +161,7 @@ func (t *Transaction) ToAddress() ([]byte, error) {
 		return t.toAddress, nil
 	}
 
-	buf := make([]byte, addressByteLength)
+	buf := make([]byte, AddressByteLength)
 	err := ethereumSym.EthGetTransactionMethodBytes(uint32(t.client), &t.blockId, t.contractId, t.id, reflection.TransactionToAddressMethod.String(), &buf[0])
 	if err != 0 {
 		return nil, fmt.Errorf("Getting transaction recipient address failed with: %s", err)

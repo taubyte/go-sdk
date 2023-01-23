@@ -3,34 +3,30 @@ package ethereum_test
 import (
 	"fmt"
 
-	ethereumSym "github.com/taubyte/go-sdk-symbols/ethereum/client"
 	ethereum "github.com/taubyte/go-sdk/ethereum/client"
 )
 
-func ExampleHexToECDSABytes() {
-	// Mocking the calls to the vm for usage in tests and playground
-	privateKeyHex := "private_key"
-	privateKeyBytes := []byte(privateKeyHex)
-	ethereumSym.MockHexToECDSA(privateKeyHex, privateKeyBytes, uint32(len(privateKeyBytes)))
+var privateKey []byte
+var publicKey []byte
+var err error
 
-	privateKey, err := ethereum.HexToECDSABytes(privateKeyHex)
+func ExampleHexToECDSABytes() {
+	privateKey, err = ethereum.HexToECDSABytes("91e4a13e5a30ad353cdf5ea7bb909dfdf967122e3b43e331ad947b68a3899b2c")
 	if err != nil {
 		return
 	}
 
-	fmt.Println(string(privateKey))
-	// Output: private_key
+	fmt.Println("success")
+	// Output: success
 }
 
-var publicKey []byte
-var err error
-
 func ExampleTestPublicKeyFromPrivate() {
-	// Mocking the calls to the vm for usage in tests and playground
-	privateKeyBytes := []byte("private_key")
-	ethereumSym.MockPublicKeyFromPrivate(privateKeyBytes)
+	privateKey, err := ethereum.HexToECDSABytes("91e4a13e5a30ad353cdf5ea7bb909dfdf967122e3b43e331ad947b68a3899b2c")
+	if err != nil {
+		return
+	}
 
-	publicKey, err = ethereum.PublicKeyFromPrivate(privateKeyBytes)
+	publicKey, err = ethereum.PublicKeyFromPrivate(privateKey)
 	if err != nil {
 		return
 	}
@@ -40,12 +36,17 @@ func ExampleTestPublicKeyFromPrivate() {
 }
 
 func ExampleTestPublicKeyFromSignedMessage() {
-	// Mocking the calls to the vm for usage in tests and playground
-	signature := []byte("signed_message")
-	message := []byte("message")
-	ethereumSym.MockPublicKeyFromSignedMessage(message)
+	privateKey, err := ethereum.HexToECDSABytes("91e4a13e5a30ad353cdf5ea7bb909dfdf967122e3b43e331ad947b68a3899b2c")
+	if err != nil {
+		return
+	}
 
-	publicKey, err = ethereum.PublicKeyFromSignedMessage(message, signature)
+	signature, err := ethereum.SignMessage([]byte("hello world"), privateKey)
+	if err != nil {
+		return
+	}
+
+	publicKey, err = ethereum.PublicKeyFromSignedMessage([]byte("hello world"), signature)
 	if err != nil {
 		return
 	}

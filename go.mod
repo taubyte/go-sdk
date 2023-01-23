@@ -3,7 +3,7 @@ module github.com/taubyte/go-sdk
 go 1.18
 
 // Direct Taubyte imports
-require github.com/taubyte/go-sdk-symbols v0.1.5
+require github.com/taubyte/go-sdk-symbols v0.1.7
 
 // Direct imports
 require (
@@ -24,4 +24,10 @@ require (
 	github.com/multiformats/go-multihash v0.0.15 // indirect
 	github.com/multiformats/go-varint v0.0.6 // indirect
 	golang.org/x/sys v0.1.0 // indirect
+)
+
+require (
+	github.com/btcsuite/btcd/btcec/v2 v2.2.0 // indirect
+	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.0.1 // indirect
+	github.com/ethereum/go-ethereum v1.10.26 // indirect
 )
