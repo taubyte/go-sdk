@@ -3,21 +3,21 @@ package event
 import (
 	"testing"
 
-	symbols "github.com/taubyte/go-sdk-symbols/event"
+	httpEventSym "github.com/taubyte/go-sdk-symbols/http/event"
 	"github.com/taubyte/go-sdk/errno"
 )
 
 func TestHttpPath(t *testing.T) {
-	symbols.MockData{Path: "/test/v1", EventId: 1}.Mock()
+	httpEventSym.MockData{Path: "/test/v1", EventId: 1}.Mock()
 
-	var e HttpEvent
+	var e Event
 	_, err := e.Path()
 	if err == nil {
 		t.Error("Expected error")
 		return
 	}
 
-	symbols.GetHttpEventPath = func(eventId uint32, bufPtr *byte, bufSize uint32) (error errno.Error) {
+	httpEventSym.GetHttpEventPath = func(eventId uint32, bufPtr *byte, bufSize uint32) (error errno.Error) {
 		return 1
 	}
 

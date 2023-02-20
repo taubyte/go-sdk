@@ -3,14 +3,14 @@ package event_test
 import (
 	"fmt"
 
-	symbols "github.com/taubyte/go-sdk-symbols/event"
+	httpEventSym "github.com/taubyte/go-sdk-symbols/http/event"
 	"github.com/taubyte/go-sdk/common"
 	"github.com/taubyte/go-sdk/event"
 )
 
-func ExampleHttpEvent_Query() {
+func ExampleEvent_Query() {
 	// Mocking the calls to the vm for usage in tests and playground
-	symbols.MockData{
+	httpEventSym.MockData{
 		EventType: common.EventTypeHttp,
 		Queries: map[string]string{
 			"username": "taubyte",

@@ -3,14 +3,14 @@ package event_test
 import (
 	"fmt"
 
-	symbols "github.com/taubyte/go-sdk-symbols/event"
+	httpEventSym "github.com/taubyte/go-sdk-symbols/http/event"
 	"github.com/taubyte/go-sdk/common"
 	"github.com/taubyte/go-sdk/event"
 )
 
-func ExampleHttpEvent_Redirect() {
+func ExampleEvent_Redirect() {
 	// Mocking the calls to the vm for usage in tests and playground
-	m := symbols.MockData{
+	m := httpEventSym.MockData{
 		EventType: common.EventTypeHttp,
 	}.Mock()
 

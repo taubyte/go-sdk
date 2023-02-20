@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	symbols "github.com/taubyte/go-sdk-symbols/event"
+	httpEventSym "github.com/taubyte/go-sdk-symbols/http/event"
 	"github.com/taubyte/go-sdk/common"
 	"github.com/taubyte/go-sdk/event"
 )
 
-func ExampleHttpEvent_Body() {
+func ExampleEvent_Body() {
 	// Mocking the calls to the vm for usage in tests and playground
-	symbols.MockData{
+	httpEventSym.MockData{
 		EventType: common.EventTypeHttp,
 		Body:      []byte("Hello, world!"),
 	}.Mock()

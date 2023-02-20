@@ -4,16 +4,16 @@ import (
 	"io"
 	"testing"
 
-	symbols "github.com/taubyte/go-sdk-symbols/event"
+	httpEventSym "github.com/taubyte/go-sdk-symbols/http/event"
 )
 
 func TestReadBasic(t *testing.T) {
 	testData := "Hello, world!"
-	symbols.MockData{
+	httpEventSym.MockData{
 		Body: []byte(testData),
 	}.Mock()
 
-	var e HttpEvent
+	var e Event
 	body, err := io.ReadAll(e.Body())
 	if err != nil {
 		t.Error(err)
@@ -26,12 +26,12 @@ func TestReadBasic(t *testing.T) {
 }
 
 func TestReadError(t *testing.T) {
-	symbols.MockData{
+	httpEventSym.MockData{
 		Body:    []byte("Hello, world"),
 		EventId: 1,
 	}.Mock()
 
-	var e HttpEvent
+	var e Event
 	_, err := io.ReadAll(e.Body())
 	if err == nil {
 		t.Error("Expected error")
@@ -40,12 +40,12 @@ func TestReadError(t *testing.T) {
 }
 
 func TestCloseError(t *testing.T) {
-	symbols.MockData{
+	httpEventSym.MockData{
 		Body:    []byte("Hello, world"),
 		EventId: 1,
 	}.Mock()
 
-	var e HttpEvent
+	var e Event
 	err := e.Body().Close()
 	if err == nil {
 		t.Error("Expected error")

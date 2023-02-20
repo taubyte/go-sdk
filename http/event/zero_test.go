@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	eventSym "github.com/taubyte/go-sdk-symbols/event"
+	httpEventSym "github.com/taubyte/go-sdk-symbols/http/event"
 	"github.com/taubyte/go-sdk/errno"
 )
 
@@ -21,51 +21,51 @@ func checkNotZeroSize(t *testing.T, err error) {
 }
 
 func TestHttpZero(t *testing.T) {
-	var e HttpEvent
+	var e Event
 
-	eventSym.GetHttpEventMethodSize = func(eventId uint32, size *uint32) (error errno.Error) {
+	httpEventSym.GetHttpEventMethodSize = func(eventId uint32, size *uint32) (error errno.Error) {
 		return 0
 	}
 	_, err := e.Method()
 	checkZeroSize(t, err)
 
-	eventSym.GetHttpEventHostSize = func(eventId uint32, size *uint32) (error errno.Error) {
+	httpEventSym.GetHttpEventHostSize = func(eventId uint32, size *uint32) (error errno.Error) {
 		return 0
 	}
 	_, err = e.Host()
 	checkZeroSize(t, err)
 
-	eventSym.GetHttpEventPathSize = func(eventId uint32, size *uint32) (error errno.Error) {
+	httpEventSym.GetHttpEventPathSize = func(eventId uint32, size *uint32) (error errno.Error) {
 		return 0
 	}
 	_, err = e.Path()
 	checkZeroSize(t, err)
 
-	eventSym.GetHttpEventUserAgentSize = func(eventId uint32, size *uint32) (error errno.Error) {
+	httpEventSym.GetHttpEventUserAgentSize = func(eventId uint32, size *uint32) (error errno.Error) {
 		return 0
 	}
 	_, err = e.UserAgent()
 	checkZeroSize(t, err)
 
-	eventSym.GetHttpEventMethodSize = func(eventId uint32, size *uint32) (error errno.Error) {
+	httpEventSym.GetHttpEventMethodSize = func(eventId uint32, size *uint32) (error errno.Error) {
 		return errno.ErrorCap
 	}
 	_, err = e.Method()
 	checkNotZeroSize(t, err)
 
-	eventSym.GetHttpEventHostSize = func(eventId uint32, size *uint32) (error errno.Error) {
+	httpEventSym.GetHttpEventHostSize = func(eventId uint32, size *uint32) (error errno.Error) {
 		return errno.ErrorCap
 	}
 	_, err = e.Host()
 	checkNotZeroSize(t, err)
 
-	eventSym.GetHttpEventPathSize = func(eventId uint32, size *uint32) (error errno.Error) {
+	httpEventSym.GetHttpEventPathSize = func(eventId uint32, size *uint32) (error errno.Error) {
 		return errno.ErrorCap
 	}
 	_, err = e.Path()
 	checkNotZeroSize(t, err)
 
-	eventSym.GetHttpEventUserAgentSize = func(eventId uint32, size *uint32) (error errno.Error) {
+	httpEventSym.GetHttpEventUserAgentSize = func(eventId uint32, size *uint32) (error errno.Error) {
 		return errno.ErrorCap
 	}
 	_, err = e.UserAgent()

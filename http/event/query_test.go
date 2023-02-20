@@ -4,14 +4,14 @@ import (
 	"testing"
 	"unsafe"
 
-	symbols "github.com/taubyte/go-sdk-symbols/event"
+	httpEventSym "github.com/taubyte/go-sdk-symbols/http/event"
 	"github.com/taubyte/go-sdk/errno"
 )
 
 func TestQueryGet(t *testing.T) {
-	var e HttpEvent
+	var e Event
 
-	symbols.MockData{
+	httpEventSym.MockData{
 		EventId: 3,
 		Queries: map[string]string{
 			"name":     "taubyte",
@@ -36,7 +36,7 @@ func TestQueryGet(t *testing.T) {
 		return
 	}
 
-	symbols.GetHttpEventQueryValueByName = func(eventId uint32, key string, bufPtr *byte, bufSize uint32) (error errno.Error) {
+	httpEventSym.GetHttpEventQueryValueByName = func(eventId uint32, key string, bufPtr *byte, bufSize uint32) (error errno.Error) {
 		return 1
 	}
 	_, err = e.Query().Get("password")
@@ -47,9 +47,9 @@ func TestQueryGet(t *testing.T) {
 }
 
 func TestQueryList(t *testing.T) {
-	var e HttpEvent = 3
+	var e Event = 3
 
-	m := symbols.MockData{
+	m := httpEventSym.MockData{
 		EventId: uint32(e),
 	}.Mock()
 
@@ -76,7 +76,7 @@ func TestQueryList(t *testing.T) {
 		return
 	}
 
-	symbols.GetHttpEventRequestQueryKeys = func(eventId uint32, bufPtr *byte) (error errno.Error) {
+	httpEventSym.GetHttpEventRequestQueryKeys = func(eventId uint32, bufPtr *byte) (error errno.Error) {
 		return 1
 	}
 
@@ -88,11 +88,11 @@ func TestQueryList(t *testing.T) {
 	}
 
 	// Conversion error
-	symbols.GetHttpEventRequestQueryKeysSize = func(eventId uint32, sizePtr *uint32) (error errno.Error) {
+	httpEventSym.GetHttpEventRequestQueryKeysSize = func(eventId uint32, sizePtr *uint32) (error errno.Error) {
 		*sizePtr = 12
 		return 0
 	}
-	symbols.GetHttpEventRequestQueryKeys = func(eventId uint32, bufPtr *byte) (error errno.Error) {
+	httpEventSym.GetHttpEventRequestQueryKeys = func(eventId uint32, bufPtr *byte) (error errno.Error) {
 		d := unsafe.Slice(bufPtr, 22)
 		copy(d, []byte("Hello, world"))
 		return 0

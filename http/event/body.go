@@ -4,17 +4,17 @@ import (
 	"fmt"
 	"io"
 
-	eventSym "github.com/taubyte/go-sdk-symbols/event"
+	httpEventSym "github.com/taubyte/go-sdk-symbols/http/event"
 	"github.com/taubyte/go-sdk/errno"
 )
 
-func (e HttpEvent) Body() HttpEventBody {
-	return HttpEventBody(e)
+func (e Event) Body() EventBody {
+	return EventBody(e)
 }
 
-func (b HttpEventBody) Read(p []byte) (int, error) {
+func (b EventBody) Read(p []byte) (int, error) {
 	var counter uint32
-	err := eventSym.ReadHttpEventBody(uint32(b), &p[0], uint32(len(p)), &counter)
+	err := httpEventSym.ReadHttpEventBody(uint32(b), &p[0], uint32(len(p)), &counter)
 	if err != 0 {
 		if err == errno.ErrorEOF {
 			return int(counter), io.EOF
@@ -26,8 +26,8 @@ func (b HttpEventBody) Read(p []byte) (int, error) {
 	return int(counter), nil
 }
 
-func (b HttpEventBody) Close() error {
-	err := eventSym.CloseHttpEventBody(uint32(b))
+func (b EventBody) Close() error {
+	err := httpEventSym.CloseHttpEventBody(uint32(b))
 	if err != (0) {
 		return fmt.Errorf("Failed closing http body with: %s", err)
 	}

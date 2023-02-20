@@ -5,6 +5,7 @@ import (
 
 	eventSym "github.com/taubyte/go-sdk-symbols/event"
 	"github.com/taubyte/go-sdk/common"
+	http "github.com/taubyte/go-sdk/http/event"
 	p2p "github.com/taubyte/go-sdk/p2p/event"
 	"github.com/taubyte/go-sdk/pubsub"
 )
@@ -16,12 +17,12 @@ func (e Event) Type() common.EventType {
 	return common.EventType(et)
 }
 
-func (e Event) HTTP() (HttpEvent, error) {
+func (e Event) HTTP() (http.Event, error) {
 	if e.Type() != common.EventTypeHttp {
 		return 0, errors.New("Not an http event")
 	}
 
-	return HttpEvent(e), nil
+	return http.Event(e), nil
 }
 
 func (e Event) PubSub() (pubsub.PubSubEvent, error) {

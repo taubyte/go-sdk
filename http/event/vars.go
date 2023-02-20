@@ -5,9 +5,9 @@ import "io"
 /************************ BODY READCLOSER ****************************/
 
 var (
-	_HttpEventBody HttpEventBody
-	_              io.Reader = _HttpEventBody
-	_              io.Closer = _HttpEventBody
+	_EventBody EventBody
+	_          io.Reader = _EventBody
+	_          io.Closer = _EventBody
 )
 
 /************************** EVENT TYPES ****************************/

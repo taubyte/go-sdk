@@ -3,13 +3,13 @@ package event
 import (
 	"fmt"
 
-	eventSym "github.com/taubyte/go-sdk-symbols/event"
+	httpEventSym "github.com/taubyte/go-sdk-symbols/http/event"
 	"github.com/taubyte/go-sdk/errno"
 )
 
-func (e HttpEvent) Method() (string, error) {
+func (e Event) Method() (string, error) {
 	var size uint32
-	err := eventSym.GetHttpEventMethodSize(uint32(e), &size)
+	err := httpEventSym.GetHttpEventMethodSize(uint32(e), &size)
 	if err != 0 || size == 0 {
 		if err == 0 {
 			err = errno.ErrorZeroSize
@@ -18,37 +18,37 @@ func (e HttpEvent) Method() (string, error) {
 	}
 
 	method := make([]byte, size)
-	err = eventSym.GetHttpEventMethod(uint32(e), &method[0], uint32(len(method)))
+	err = httpEventSym.GetHttpEventMethod(uint32(e), &method[0], uint32(len(method)))
 	if err != 0 {
 		return "", fmt.Errorf("Getting HTTP method failed with: %s", err)
 	}
 	return string(method), nil
 }
 
-func (e HttpEvent) Write(data []byte) (int, error) {
+func (e Event) Write(data []byte) (int, error) {
 	if len(data) == 0 {
 		return 0, nil
 	}
 
 	var n uint32
-	err := eventSym.EventHttpWrite(uint32(e), &data[0], uint32(len(data)), &n)
+	err := httpEventSym.EventHttpWrite(uint32(e), &data[0], uint32(len(data)), &n)
 	if err != 0 {
 		return int(n), fmt.Errorf("Writing HTTP reply failed with: %s", err)
 	}
 	return int(n), nil
 }
 
-func (e HttpEvent) Return(code int) error {
-	err := eventSym.EventHttpRetCode(uint32(e), uint32(code))
+func (e Event) Return(code int) error {
+	err := httpEventSym.EventHttpRetCode(uint32(e), uint32(code))
 	if err != 0 {
 		return fmt.Errorf("Writing return code failed with: %s", err)
 	}
 	return nil
 }
 
-func (e HttpEvent) Host() (string, error) {
+func (e Event) Host() (string, error) {
 	var size uint32
-	err := eventSym.GetHttpEventHostSize(uint32(e), &size)
+	err := httpEventSym.GetHttpEventHostSize(uint32(e), &size)
 	if err != 0 || size == 0 {
 		if err == 0 {
 			err = errno.ErrorZeroSize
@@ -57,16 +57,16 @@ func (e HttpEvent) Host() (string, error) {
 	}
 
 	host := make([]byte, size)
-	err = eventSym.GetHttpEventHost(uint32(e), &host[0], uint32(len(host)))
+	err = httpEventSym.GetHttpEventHost(uint32(e), &host[0], uint32(len(host)))
 	if err != 0 {
 		return "", fmt.Errorf("Getting HTTP request host failed with: %s", err)
 	}
 	return string(host), nil
 }
 
-func (e HttpEvent) Path() (string, error) {
+func (e Event) Path() (string, error) {
 	var size uint32
-	err := eventSym.GetHttpEventPathSize(uint32(e), &size)
+	err := httpEventSym.GetHttpEventPathSize(uint32(e), &size)
 	if err != 0 || size == 0 {
 		if err == 0 {
 			err = errno.ErrorZeroSize
@@ -75,16 +75,16 @@ func (e HttpEvent) Path() (string, error) {
 	}
 
 	path := make([]byte, size)
-	err = eventSym.GetHttpEventPath(uint32(e), &path[0], uint32(len(path)))
+	err = httpEventSym.GetHttpEventPath(uint32(e), &path[0], uint32(len(path)))
 	if err != 0 {
 		return "", fmt.Errorf("Getting HTTP request path failed with: %s", err)
 	}
 	return string(path), nil
 }
 
-func (e HttpEvent) UserAgent() (string, error) {
+func (e Event) UserAgent() (string, error) {
 	var size uint32
-	err := eventSym.GetHttpEventUserAgentSize(uint32(e), &size)
+	err := httpEventSym.GetHttpEventUserAgentSize(uint32(e), &size)
 	if err != 0 || size == 0 {
 		if err == 0 {
 			err = errno.ErrorZeroSize
@@ -93,7 +93,7 @@ func (e HttpEvent) UserAgent() (string, error) {
 	}
 
 	userAgent := make([]byte, size)
-	err = eventSym.GetHttpEventUserAgent(uint32(e), &userAgent[0], uint32(len(userAgent)))
+	err = httpEventSym.GetHttpEventUserAgent(uint32(e), &userAgent[0], uint32(len(userAgent)))
 	if err != 0 {
 		return "", fmt.Errorf("Getting HTTP request User Agent failed with: %s", err)
 	}

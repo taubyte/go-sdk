@@ -3,17 +3,17 @@ package event
 import (
 	"fmt"
 
-	eventSym "github.com/taubyte/go-sdk-symbols/event"
+	httpEventSym "github.com/taubyte/go-sdk-symbols/http/event"
 	"github.com/taubyte/go-sdk/utils/codec"
 )
 
-func (e HttpEvent) Query() HttpQueries {
-	return HttpQueries(e)
+func (e Event) Query() Queries {
+	return Queries(e)
 }
 
-func (e HttpQueries) Get(key string) (string, error) {
+func (e Queries) Get(key string) (string, error) {
 	var size uint32
-	err := eventSym.GetHttpEventQueryValueByNameSize(uint32(e), &size, key)
+	err := httpEventSym.GetHttpEventQueryValueByNameSize(uint32(e), &size, key)
 	if err != 0 {
 		return "", fmt.Errorf("Getting HTTP query size for key: `%s` failed with: %s", key, err)
 	}
@@ -22,7 +22,7 @@ func (e HttpQueries) Get(key string) (string, error) {
 	}
 
 	query := make([]byte, size)
-	err = eventSym.GetHttpEventQueryValueByName(uint32(e), key, &query[0], uint32(len(query)))
+	err = httpEventSym.GetHttpEventQueryValueByName(uint32(e), key, &query[0], uint32(len(query)))
 	if err != 0 {
 		return "", fmt.Errorf("Getting HTTP query for key: `%s` failed with: %s", key, err)
 	}
@@ -30,9 +30,9 @@ func (e HttpQueries) Get(key string) (string, error) {
 	return string(query), nil
 }
 
-func (e HttpQueries) List() ([]string, error) {
+func (e Queries) List() ([]string, error) {
 	var size uint32
-	err := eventSym.GetHttpEventRequestQueryKeysSize(uint32(e), &size)
+	err := httpEventSym.GetHttpEventRequestQueryKeysSize(uint32(e), &size)
 	if err != 0 {
 		return nil, fmt.Errorf("Getting all query keys size failed with: %s", err)
 	}
@@ -41,7 +41,7 @@ func (e HttpQueries) List() ([]string, error) {
 	}
 
 	query := make([]byte, size)
-	if err := eventSym.GetHttpEventRequestQueryKeys(uint32(e), &query[0]); err != 0 {
+	if err := httpEventSym.GetHttpEventRequestQueryKeys(uint32(e), &query[0]); err != 0 {
 		return nil, fmt.Errorf("Getting all query keys failed with: %s", err)
 	}
 

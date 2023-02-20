@@ -3,13 +3,13 @@ package event
 import (
 	"testing"
 
-	symbols "github.com/taubyte/go-sdk-symbols/event"
+	httpEventSym "github.com/taubyte/go-sdk-symbols/http/event"
 )
 
 func TestHttpWrite(t *testing.T) {
-	symbols.MockData{EventId: 1}.Mock()
+	httpEventSym.MockData{EventId: 1}.Mock()
 
-	var e HttpEvent
+	var e Event
 	toWrite := []byte("Hello, world")
 	_, err := e.Write(toWrite)
 	if err == nil {

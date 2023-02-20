@@ -3,14 +3,14 @@ package event
 import (
 	"testing"
 
-	symbols "github.com/taubyte/go-sdk-symbols/event"
+	httpEventSym "github.com/taubyte/go-sdk-symbols/http/event"
 )
 
 func TestHttpCode(t *testing.T) {
-	m := &symbols.MockData{EventId: 1}
+	m := &httpEventSym.MockData{EventId: 1}
 	m.MockReturnCode()
 
-	var e HttpEvent
+	var e Event
 	err := e.Return(503)
 	if err == nil {
 		t.Error("expected and error")

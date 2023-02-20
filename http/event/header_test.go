@@ -4,14 +4,14 @@ import (
 	"testing"
 	"unsafe"
 
-	symbols "github.com/taubyte/go-sdk-symbols/event"
+	httpEventSym "github.com/taubyte/go-sdk-symbols/http/event"
 	"github.com/taubyte/go-sdk/errno"
 )
 
 func TestHeaderSet(t *testing.T) {
-	var headers HttpEventHeaders
+	var headers EventHeaders
 
-	symbols.EventHttpHeaderAdd = func(eventId uint32, key, val string) (error errno.Error) {
+	httpEventSym.EventHttpHeaderAdd = func(eventId uint32, key, val string) (error errno.Error) {
 		return 0
 	}
 
@@ -27,7 +27,7 @@ func TestHeaderSet(t *testing.T) {
 		return
 	}
 
-	symbols.EventHttpHeaderAdd = func(eventId uint32, key, val string) (error errno.Error) {
+	httpEventSym.EventHttpHeaderAdd = func(eventId uint32, key, val string) (error errno.Error) {
 		return errno.ErrorHeaderNotFound
 	}
 
@@ -39,8 +39,8 @@ func TestHeaderSet(t *testing.T) {
 }
 
 func TestHeaderGet(t *testing.T) {
-	var headers HttpEventHeaders
-	symbols.MockData{EventId: 1}.Mock()
+	var headers EventHeaders
+	httpEventSym.MockData{EventId: 1}.Mock()
 
 	_, err := headers.Get("Content-Type")
 	if err == nil {
@@ -49,7 +49,7 @@ func TestHeaderGet(t *testing.T) {
 	}
 
 	// Size 0
-	headers = HttpEventHeaders(1)
+	headers = EventHeaders(1)
 	contentType, err := headers.Get("Content-Type")
 	if err != nil {
 		t.Error(err)
@@ -68,7 +68,7 @@ func TestHeaderGet(t *testing.T) {
 	}
 
 	// Get error
-	symbols.GetHttpEventHeaderByName = func(eventId uint32, key string, bufPtr *byte, bufSize uint32) (error errno.Error) {
+	httpEventSym.GetHttpEventHeaderByName = func(eventId uint32, key string, bufPtr *byte, bufSize uint32) (error errno.Error) {
 		return 1
 	}
 
@@ -80,8 +80,8 @@ func TestHeaderGet(t *testing.T) {
 }
 
 func TestHeaderList(t *testing.T) {
-	var headers HttpEventHeaders
-	symbols.MockData{EventId: 1}.Mock()
+	var headers EventHeaders
+	httpEventSym.MockData{EventId: 1}.Mock()
 
 	_, err := headers.List()
 	if err == nil {
@@ -90,7 +90,7 @@ func TestHeaderList(t *testing.T) {
 	}
 
 	// Size 0
-	headers = HttpEventHeaders(1)
+	headers = EventHeaders(1)
 	list, err := headers.List()
 	if err != nil {
 		t.Error(err)
@@ -109,7 +109,7 @@ func TestHeaderList(t *testing.T) {
 	}
 
 	// Get error
-	symbols.GetHttpEventRequestHeaderKeys = func(eventId uint32, bufPtr *byte) (error errno.Error) {
+	httpEventSym.GetHttpEventRequestHeaderKeys = func(eventId uint32, bufPtr *byte) (error errno.Error) {
 		return 1
 	}
 	list, err = headers.List()
@@ -119,11 +119,11 @@ func TestHeaderList(t *testing.T) {
 	}
 
 	// Conversion error
-	symbols.GetHttpEventRequestHeaderKeysSize = func(eventId uint32, sizePtr *uint32) (error errno.Error) {
+	httpEventSym.GetHttpEventRequestHeaderKeysSize = func(eventId uint32, sizePtr *uint32) (error errno.Error) {
 		*sizePtr = 12
 		return 0
 	}
-	symbols.GetHttpEventRequestHeaderKeys = func(eventId uint32, bufPtr *byte) (error errno.Error) {
+	httpEventSym.GetHttpEventRequestHeaderKeys = func(eventId uint32, bufPtr *byte) (error errno.Error) {
 		d := unsafe.Slice(bufPtr, 22)
 		copy(d, []byte("Hello, world"))
 		return 0

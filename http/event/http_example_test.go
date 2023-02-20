@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	symbols "github.com/taubyte/go-sdk-symbols/event"
+	httpEventSym "github.com/taubyte/go-sdk-symbols/http/event"
 	"github.com/taubyte/go-sdk/common"
 	"github.com/taubyte/go-sdk/event"
 )
 
-func ExampleHttpEvent_Return() {
+func ExampleEvent_Return() {
 	// Mocking the calls to the vm for usage in tests and playground
-	m := symbols.MockData{
+	m := httpEventSym.MockData{
 		EventType: common.EventTypeHttp,
 	}.Mock()
 
@@ -31,9 +31,9 @@ func ExampleHttpEvent_Return() {
 	// Output: Code: 404
 }
 
-func ExampleHttpEvent_Write() {
+func ExampleEvent_Write() {
 	// Mocking the calls to the vm for usage in tests and playground
-	m := symbols.MockData{
+	m := httpEventSym.MockData{
 		EventType: common.EventTypeHttp,
 	}.Mock()
 
@@ -58,9 +58,9 @@ func ExampleHttpEvent_Write() {
 	// Output: ReturnBody: Hello, world!
 }
 
-func ExampleHttpEvent_Host() {
+func ExampleEvent_Host() {
 	// Mocking the calls to the vm for usage in tests and playground
-	symbols.MockData{
+	httpEventSym.MockData{
 		EventType: common.EventTypeHttp,
 		Host:      "hal.computers.com",
 	}.Mock()
@@ -81,9 +81,9 @@ func ExampleHttpEvent_Host() {
 	// Output: Host: hal.computers.com
 }
 
-func ExampleHttpEvent_Method() {
+func ExampleEvent_Method() {
 	// Mocking the calls to the vm for usage in tests and playground
-	symbols.MockData{
+	httpEventSym.MockData{
 		EventType: common.EventTypeHttp,
 		Method:    "POST",
 	}.Mock()
@@ -104,9 +104,9 @@ func ExampleHttpEvent_Method() {
 	// Output: Method: POST
 }
 
-func ExampleHttpEvent_Path() {
+func ExampleEvent_Path() {
 	// Mocking the calls to the vm for usage in tests and playground
-	symbols.MockData{
+	httpEventSym.MockData{
 		EventType: common.EventTypeHttp,
 		Path:      "/test/v1",
 	}.Mock()
@@ -127,9 +127,9 @@ func ExampleHttpEvent_Path() {
 	// Output: Path: /test/v1
 }
 
-func ExampleHttpEvent_UserAgent() {
+func ExampleEvent_UserAgent() {
 	// Mocking the calls to the vm for usage in tests and playground
-	symbols.MockData{
+	httpEventSym.MockData{
 		EventType: common.EventTypeHttp,
 		UserAgent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/517.36 (KHTML, like Gecko) Chrome/101.0.0.0 Safari/5447.36",
 	}.Mock()
@@ -250,7 +250,7 @@ func httpExample(e event.Event) uint32 {
 
 func ExampleEvent_HTTP() {
 	// Mocking the calls to the vm for usage in tests and playground
-	m := symbols.MockData{
+	m := httpEventSym.MockData{
 		EventType: common.EventTypeHttp,
 		Body:      []byte("Hello, world!"),
 		Host:      "taubyte.com",

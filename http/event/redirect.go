@@ -3,7 +3,7 @@ package event
 import (
 	"fmt"
 
-	eventSym "github.com/taubyte/go-sdk-symbols/event"
+	httpEventSym "github.com/taubyte/go-sdk-symbols/http/event"
 )
 
 type httpRedirect struct {
@@ -12,7 +12,7 @@ type httpRedirect struct {
 }
 
 func (r httpRedirect) redirect(code uint32) error {
-	err := eventSym.EventHttpRedirect(r.eventId, r.url, code)
+	err := httpEventSym.EventHttpRedirect(r.eventId, r.url, code)
 	if err != 0 {
 		return fmt.Errorf("redirecting HTTP request failed with: %s", err)
 	}
@@ -20,7 +20,7 @@ func (r httpRedirect) redirect(code uint32) error {
 	return nil
 }
 
-func (e HttpEvent) Redirect(url string) httpRedirect {
+func (e Event) Redirect(url string) httpRedirect {
 	return httpRedirect{uint32(e), url}
 }
 
