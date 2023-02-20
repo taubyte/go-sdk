@@ -1,15 +1,16 @@
-package pubsub
+package event
 
 import (
 	"errors"
 	"fmt"
 
 	pubsubSym "github.com/taubyte/go-sdk-symbols/pubsub"
+	pubsubNode "github.com/taubyte/go-sdk/pubsub/node"
 )
 
 // Data will get the data received with the pub-sub event
 // returns a byte slice and an error
-func (e PubSubEvent) Data() ([]byte, error) {
+func (e Event) Data() ([]byte, error) {
 	var size uint32
 	err := pubsubSym.GetMessageDataSize(uint32(e), &size)
 	if err != 0 {
@@ -30,7 +31,7 @@ func (e PubSubEvent) Data() ([]byte, error) {
 
 // Channel will get the name of the event's channel
 // returns a ChannelObject and an error
-func (e PubSubEvent) Channel() (*ChannelObject, error) {
+func (e Event) Channel() (*pubsubNode.ChannelObject, error) {
 	var size uint32
 	err := pubsubSym.GetMessageChannelSize(uint32(e), &size)
 	if err != 0 {
@@ -46,7 +47,5 @@ func (e PubSubEvent) Channel() (*ChannelObject, error) {
 		return nil, fmt.Errorf("Getting message channel failed with: %s", err)
 	}
 
-	return &ChannelObject{
-		name: string(channelName),
-	}, nil
+	return pubsubNode.Channel(string(channelName))
 }

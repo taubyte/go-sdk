@@ -1,4 +1,4 @@
-package pubsub
+package event
 
 import (
 	"testing"
@@ -10,7 +10,7 @@ import (
 func TestEventData(t *testing.T) {
 	m := symbols.MockData{EventId: 1}.Mock()
 
-	var e PubSubEvent
+	var e Event
 
 	// Wrong event
 	_, err := e.Data()
@@ -49,7 +49,7 @@ func TestEventData(t *testing.T) {
 func TestEventChannel(t *testing.T) {
 	m := symbols.MockData{EventId: 1}.Mock()
 
-	var e PubSubEvent
+	var e Event
 
 	// Wrong event
 	_, err := e.Channel()

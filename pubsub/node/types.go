@@ -1,7 +1,4 @@
-package pubsub
-
-type PubSubEvent uint32
-type PubSubEventMessage uint32
+package node
 
 type ChannelObject struct {
 	name string

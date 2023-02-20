@@ -1,13 +1,14 @@
-package pubsub_test
+package event_test
 
 import (
 	"fmt"
 
 	symbols "github.com/taubyte/go-sdk-symbols/pubsub"
 	"github.com/taubyte/go-sdk/event"
+	_ "github.com/taubyte/go-sdk/pubsub/event"
 )
 
-func ExamplePubSubEvent_Data() {
+func ExampleEvent_Data() {
 	// Mocking the calls to the vm for usage in tests and playground
 	symbols.MockData{
 		EventData: []byte("Hello, world!"),
@@ -31,7 +32,7 @@ func ExamplePubSubEvent_Data() {
 	// Output: Data: Hello, world!
 }
 
-func ExamplePubSubEvent_Channel() {
+func ExampleEvent_Channel() {
 	// Mocking the calls to the vm for usage in tests and playground
 	symbols.MockData{
 		Channel: "someChannel",

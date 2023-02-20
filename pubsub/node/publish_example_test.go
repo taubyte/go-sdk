@@ -1,10 +1,10 @@
-package pubsub_test
+package node_test
 
 import (
 	"fmt"
 
 	symbols "github.com/taubyte/go-sdk-symbols/pubsub"
-	"github.com/taubyte/go-sdk/pubsub"
+	pubsub "github.com/taubyte/go-sdk/pubsub/node"
 )
 
 func ExampleChannelObject_Publish() {
