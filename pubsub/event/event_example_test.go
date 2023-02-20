@@ -3,7 +3,7 @@ package event_test
 import (
 	"fmt"
 
-	symbols "github.com/taubyte/go-sdk-symbols/pubsub"
+	symbols "github.com/taubyte/go-sdk-symbols/pubsub/event"
 	"github.com/taubyte/go-sdk/event"
 	_ "github.com/taubyte/go-sdk/pubsub/event"
 )

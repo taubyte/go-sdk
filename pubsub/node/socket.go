@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/url"
 
-	pubsubSym "github.com/taubyte/go-sdk-symbols/pubsub"
+	pubsubSym "github.com/taubyte/go-sdk-symbols/pubsub/node"
 )
 
 func (c *ChannelObject) WebSocket() WebSocket {

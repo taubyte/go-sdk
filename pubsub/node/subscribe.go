@@ -3,7 +3,7 @@ package node
 import (
 	"fmt"
 
-	pubsubSym "github.com/taubyte/go-sdk-symbols/pubsub"
+	pubsubSym "github.com/taubyte/go-sdk-symbols/pubsub/node"
 )
 
 // Subscribe tells a node to subscribe to a given pub-sub channel

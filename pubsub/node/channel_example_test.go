@@ -3,7 +3,7 @@ package node_test
 import (
 	"fmt"
 
-	symbols "github.com/taubyte/go-sdk-symbols/pubsub"
+	symbols "github.com/taubyte/go-sdk-symbols/pubsub/node"
 	pubsub "github.com/taubyte/go-sdk/pubsub/node"
 )
 

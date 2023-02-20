@@ -3,7 +3,7 @@ package node
 import (
 	"fmt"
 
-	pubsubSym "github.com/taubyte/go-sdk-symbols/pubsub"
+	pubsubSym "github.com/taubyte/go-sdk-symbols/pubsub/node"
 )
 
 // Publish will publish provided data onto the pub-sub channel

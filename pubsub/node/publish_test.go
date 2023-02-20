@@ -3,7 +3,7 @@ package node
 import (
 	"testing"
 
-	symbols "github.com/taubyte/go-sdk-symbols/pubsub"
+	symbols "github.com/taubyte/go-sdk-symbols/pubsub/node"
 )
 
 func TestPublish(t *testing.T) {

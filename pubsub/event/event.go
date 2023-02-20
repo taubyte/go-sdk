@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	pubsubSym "github.com/taubyte/go-sdk-symbols/pubsub"
+	pubsubSym "github.com/taubyte/go-sdk-symbols/pubsub/event"
 	pubsubNode "github.com/taubyte/go-sdk/pubsub/node"
 )
 

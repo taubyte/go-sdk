@@ -3,7 +3,7 @@ package event
 import (
 	"testing"
 
-	symbols "github.com/taubyte/go-sdk-symbols/pubsub"
+	symbols "github.com/taubyte/go-sdk-symbols/pubsub/event"
 	"github.com/taubyte/go-sdk/errno"
 )
 
