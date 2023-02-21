@@ -17,7 +17,7 @@ func (c *ContractMethod) Call(inputParameters ...interface{}) ([]interface{}, er
 	}
 
 	var size uint32
-	err0 := ethereumSym.EthCallContractSize(uint32(c.client), c.contractId, c.name, &encoded[0], uint32(len(encoded)), &size)
+	err0 := ethereumSym.EthCallContractSize(uint32(c.client), c.contractID, c.name, &encoded[0], uint32(len(encoded)), &size)
 	if err0 != 0 {
 		return nil, fmt.Errorf("Calling contract failed with: %s", err0)
 	}
@@ -26,7 +26,7 @@ func (c *ContractMethod) Call(inputParameters ...interface{}) ([]interface{}, er
 	}
 
 	buf := make([]byte, size)
-	err0 = ethereumSym.EthCallContract(uint32(c.client), c.contractId, c.name, &buf[0])
+	err0 = ethereumSym.EthCallContract(uint32(c.client), c.contractID, c.name, &buf[0])
 	if err0 != 0 {
 		return nil, fmt.Errorf("Called contract but unable to write data with: %s", err0)
 	}
@@ -61,33 +61,33 @@ func (c *ContractMethod) Call(inputParameters ...interface{}) ([]interface{}, er
 }
 
 // Transact invokes the (paid) contract method with params as input values. If chain id is nil, then current chain Id is used.
-func (c *ContractMethod) Transact(chainId *big.Int, privateKey []byte, inputParameters ...interface{}) (*Transaction, error) {
+func (c *ContractMethod) Transact(chainID *big.Int, privateKey []byte, inputParameters ...interface{}) (*Transaction, error) {
 	var err error
 	if len(privateKey) == 0 {
 		return nil, fmt.Errorf("Private key cannot be empty")
 	}
 
-	if chainId == nil {
-		chainId, err = c.client.CurrentChainId()
+	if chainID == nil {
+		chainID, err = c.client.CurrentChainID()
 		if err != nil {
 			return nil, fmt.Errorf("Getting current chain Id failed with: %s", err)
 		}
 	}
 
-	chainBytes := chainId.Bytes()
-	var transactionId uint32
+	chainBytes := chainID.Bytes()
+	var transactionID uint32
 
 	encoded, err := c.handleInputs(inputParameters...)
 	if err != nil {
 		return nil, fmt.Errorf("Handling inputs failed with: %s", err)
 	}
 
-	err0 := ethereumSym.EthTransactContract(uint32(c.client), c.contractId, &chainBytes[0], uint32(len(chainBytes)), c.name, &privateKey[0], uint32(len(privateKey)), &encoded[0], uint32(len(encoded)), &transactionId)
+	err0 := ethereumSym.EthTransactContract(uint32(c.client), c.contractID, &chainBytes[0], uint32(len(chainBytes)), c.name, &privateKey[0], uint32(len(privateKey)), &encoded[0], uint32(len(encoded)), &transactionID)
 	if err0 != 0 {
 		return nil, fmt.Errorf("Transacting contract method `%s` failed with: %s", c.name, err0)
 	}
 
-	return &Transaction{id: transactionId, contractId: c.contractId}, nil
+	return &Transaction{id: transactionID, contractID: c.contractID}, nil
 }
 
 func (c *ContractMethod) handleInputs(inputParameters ...interface{}) ([]byte, error) {

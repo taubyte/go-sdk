@@ -22,8 +22,7 @@ func SignMessage(message, privKey []byte) ([]byte, error) {
 	return signature, nil
 }
 
-// VerifyMessage checks the signed ECDSA message with the original message to verify
-// if the message was signed by the given public key
+// VerifySignature checks the signed ECDSA message with the original message to verify if the message was signed by the given public key
 func VerifySignature(message, publicKey, signature []byte) error {
 	err := verifySignInputs(message, publicKey, signature, false, true)
 	if err != nil {

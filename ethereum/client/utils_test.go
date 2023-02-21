@@ -15,24 +15,24 @@ var (
 	testString = "test string"
 	testBytes  = []byte("test bytes")
 
-	testTransactionId   uint32
+	testTransactionID   uint32
 	testTransactionHash = make([]byte, 32)
 	testTransactions    []uint32
 
 	testNonce uint64
 
-	testClientId uint32
+	testClientID uint32
 
 	testCurrentBlockNumber uint64
 	testBlockNumber        *big.Int
-	testBlockId            uint64
+	testBlockID            uint64
 
 	testChain = big.NewInt(rand.Int63())
 
-	testRpcUrl          = "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
+	testRPCURL          = "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
 	testAddressBytes, _ = bytes.AddressFromHex(testAddress)
 
-	testContractId         uint32
+	testContractID         uint32
 	testContractMethodSize uint32
 
 	testInputFailureMethod  = "inputFailureMethod"
@@ -50,20 +50,20 @@ var (
 )
 
 func setTestVars() error {
-	testTransactionId = uint32(rand.Int31())
+	testTransactionID = uint32(rand.Int31())
 	testTransactions = []uint32{uint32(rand.Int31()), uint32(rand.Int31()), uint32(rand.Int31())}
 
 	testNonce = uint64(rand.Int63())
 
-	testClientId = uint32(rand.Int31())
+	testClientID = uint32(rand.Int31())
 
 	testCurrentBlockNumber = uint64(rand.Int63())
 	testBlockNumber = big.NewInt(int64(testCurrentBlockNumber))
-	testBlockId = uint64(rand.Int63())
+	testBlockID = uint64(rand.Int63())
 
 	testChain = big.NewInt(rand.Int63())
 
-	testContractId = uint32(rand.Int31())
+	testContractID = uint32(rand.Int31())
 
 	testPassingInput = uint32(rand.Int31())
 	testPassingOutput = uint32(rand.Int31())
@@ -86,12 +86,12 @@ func setTestVars() error {
 			},
 		},
 
-		ContractSizeClientId: testClientId,
-		ContractDataClientId: testClientId,
-		MethodSizeClientId:   testClientId,
-		MethodDataClientId:   testClientId,
-		CallSizeClientId:     testClientId,
-		CallDataClientId:     testClientId,
+		ContractSizeClientId: testClientID,
+		ContractDataClientId: testClientID,
+		MethodSizeClientId:   testClientID,
+		MethodDataClientId:   testClientID,
+		CallSizeClientId:     testClientID,
+		CallDataClientId:     testClientID,
 	}
 
 	methods := []string{}
@@ -117,7 +117,7 @@ func newMockTransaction() (*Transaction, *Block, Client, error) {
 		return nil, nil, 0, err
 	}
 
-	ethereumSym.MockBlockTransaction(testClientId, testTransactionId)
+	ethereumSym.MockBlockTransaction(testClientID, testTransactionID)
 
 	tx, err := block.Transaction(testTransactionHash)
 	if err != nil {
@@ -128,15 +128,15 @@ func newMockTransaction() (*Transaction, *Block, Client, error) {
 }
 
 func newMockClient() (Client, error) {
-	ethereumSym.MockClientNew(int32(testClientId))
+	ethereumSym.MockClientNew(int32(testClientID))
 
-	client, err := New(testRpcUrl)
+	client, err := New(testRPCURL)
 	if err != nil {
 		return 0, err
 	}
 
-	if client != Client(testClientId) {
-		return 0, fmt.Errorf("Expected client value `%d` got `%d`", testClientId, client)
+	if client != Client(testClientID) {
+		return 0, fmt.Errorf("Expected client value `%d` got `%d`", testClientID, client)
 	}
 
 	return client, nil
@@ -148,17 +148,17 @@ func newMockBlock() (Client, *Block, error) {
 		return 0, nil, err
 	}
 
-	ethereumSym.MockBlockNumber(testClientId, testClientId, testBlockNumber)
+	ethereumSym.MockBlockNumber(testClientID, testClientID, testBlockNumber)
 
-	ethereumSym.MockBlockByNumber(testClientId, testBlockId)
+	ethereumSym.MockBlockByNumber(testClientID, testBlockID)
 
 	block, err := client.BlockByNumber(testBlockNumber)
 	if err != nil {
 		return 0, nil, err
 	}
 
-	if block.id != testBlockId {
-		return 0, nil, fmt.Errorf("Expected block id to be `%d` got `%d`", testBlockId, block.id)
+	if block.id != testBlockID {
+		return 0, nil, fmt.Errorf("Expected block id to be `%d` got `%d`", testBlockID, block.id)
 	}
 
 	return client, block, nil

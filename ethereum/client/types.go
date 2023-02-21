@@ -21,8 +21,9 @@ type Contract struct {
 	address string
 }
 
+// ContractMethod defines the contract method and wraps the methods for the method.
 type ContractMethod struct {
-	contractId uint32
+	contractID uint32
 	client     Client
 	name       string
 	inputs     []string
@@ -33,8 +34,8 @@ type ContractMethod struct {
 type Transaction struct {
 	id            uint32
 	client        Client
-	blockId       uint64
-	contractId    uint32
+	blockID       uint64
+	contractID    uint32
 	json          []byte
 	nonce         uint64
 	gasPrice      *big.Int
@@ -61,4 +62,5 @@ type abi struct {
 	outputs []string
 }
 
+// Address is the fixed (20) byte array of an address
 type Address [AddressByteLength]byte

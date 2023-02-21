@@ -5,14 +5,13 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+
+	"gotest.tools/assert"
 )
 
 func TestHexToECDSABytes(t *testing.T) {
 	_, err := HexToECDSABytes(testPrivateKeyHex)
-	if err != nil {
-		t.Errorf("HexToECDSABytes failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	_, err = HexToECDSABytes("hello world")
 	if err == nil {
@@ -23,16 +22,10 @@ func TestHexToECDSABytes(t *testing.T) {
 
 func TestPublicKeyFromPrivate(t *testing.T) {
 	privateKey, err := HexToECDSABytes(testPrivateKeyHex)
-	if err != nil {
-		t.Errorf("HexToECDSABytes failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	_, err = PublicKeyFromPrivate(privateKey)
-	if err != nil {
-		t.Errorf("getting public key from private failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	_, err = PublicKeyFromPrivate([]byte("hello world"))
 	if err == nil {
@@ -43,20 +36,13 @@ func TestPublicKeyFromPrivate(t *testing.T) {
 
 func TestPublicKeyFromSignedMessage(t *testing.T) {
 	privateKey, err := HexToECDSABytes(testPrivateKeyHex)
-	if err != nil {
-		t.Errorf("HexToECDSABytes failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	signature, err := SignMessage([]byte("hello world"), privateKey)
-	if err != nil {
-		t.Errorf("signing message failed with: %s", err)
-	}
+	assert.NilError(t, err)
+
 	_, err = PublicKeyFromSignedMessage([]byte("hello world"), signature)
-	if err != nil {
-		t.Errorf("getting public key from private failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	_, err = PublicKeyFromSignedMessage([]byte("hello_worlds"), privateKey)
 	if err == nil {
@@ -73,10 +59,7 @@ func TestParseSignature(t *testing.T) {
 	}
 
 	_, err = ParseSignature("0x62428d75d9f9f741e233941f844a6dce056d86b3159f0091bd3cc6e65b0bd23123e9fbdf107965716d94b6ad481462cf28d33c1323c515f411903b3abca41bc71c")
-	if err != nil {
-		t.Errorf("parsing signature failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 }
 
 func TestToEthJsMessage(t *testing.T) {
@@ -88,16 +71,10 @@ func TestToEthJsMessage(t *testing.T) {
 
 func TestAddressFromPubKey(t *testing.T) {
 	privateKey, err := HexToECDSABytes(testPrivateKeyHex)
-	if err != nil {
-		t.Errorf("HexToECDSABytes failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	publicKey, err := PublicKeyFromPrivate(privateKey)
-	if err != nil {
-		t.Errorf("getting public key from private failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	address := AddressFromPubKey(publicKey)
 	_ = address.Bytes() // for test coverage

@@ -26,8 +26,12 @@ require (
 	golang.org/x/sys v0.1.0 // indirect
 )
 
+require gotest.tools v2.2.0+incompatible
+
 require (
 	github.com/btcsuite/btcd/btcec/v2 v2.2.0 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.0.1 // indirect
 	github.com/ethereum/go-ethereum v1.10.26 // indirect
+	github.com/google/go-cmp v0.5.8 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 )
