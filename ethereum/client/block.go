@@ -17,14 +17,14 @@ func (b *Block) Transaction(hash []byte) (*Transaction, error) {
 		return nil, errors.New("Invalid hash")
 	}
 
-	var transactionId uint32
-	if err0 := ethereumSym.EthGetTransactionFromBlockByHash(uint32(b.client), &b.id, &transactionId, &hash[0]); err0 != 0 {
+	var transactionID uint32
+	if err0 := ethereumSym.EthGetTransactionFromBlockByHash(uint32(b.client), &b.id, &transactionID, &hash[0]); err0 != 0 {
 		return nil, fmt.Errorf("Getting transaction by hash from block failed with %s", err0)
 	}
 
 	return &Transaction{
-		id:            transactionId,
-		blockId:       b.id,
+		id:            transactionID,
+		blockID:       b.id,
 		client:        b.client,
 		hash:          hash,
 		rawSignatures: rawSignatures{},
@@ -58,7 +58,7 @@ func (b *Block) Transactions() ([]*Transaction, error) {
 		t := &Transaction{
 			id:            transaction,
 			client:        b.client,
-			blockId:       b.id,
+			blockID:       b.id,
 			rawSignatures: rawSignatures{},
 		}
 

@@ -10,69 +10,50 @@ import (
 
 	ethereumSym "github.com/taubyte/go-sdk-symbols/ethereum/client"
 	"github.com/taubyte/go-sdk/errno"
+	"gotest.tools/assert"
 )
 
 func TestGetContract(t *testing.T) {
 	err := setTestVars()
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	client, err := newMockClient()
-	if err != nil {
-		t.Error(err)
-		return
-	}
-	err = ethereumSym.MockNewBoundContract(testContract, testContractId, false, false)
-	if err != nil {
-		t.Error(err)
+	assert.NilError(t, err)
+
+	err = ethereumSym.MockNewBoundContract(testContract, testContractID, false, false)
+	assert.NilError(t, err)
+
+	contract, err := client.getContract(testAddress, testContractID, testContractMethodSize)
+	assert.NilError(t, err)
+
+	if contract.id != testContractID {
+		t.Errorf("Expected contract id `%d` got `%d`", testContractID, contract.id)
 		return
 	}
 
-	contract, err := client.getContract(testAddress, testContractId, testContractMethodSize)
-	if err != nil {
-		t.Errorf("Getting contract failed with: %s", err)
-		return
-	}
+	err = ethereumSym.MockNewBoundContract(testContract, testContractID, false, true)
+	assert.NilError(t, err)
 
-	if contract.id != testContractId {
-		t.Errorf("Expected contract id `%d` got `%d`", testContractId, contract.id)
-		return
-	}
-
-	err = ethereumSym.MockNewBoundContract(testContract, testContractId, false, true)
-	if err != nil {
-		t.Error(err)
-		return
-	}
-
-	_, err = client.getContract(testAddress, testContractId, testContractMethodSize)
+	_, err = client.getContract(testAddress, testContractID, testContractMethodSize)
 	if err == nil {
 		t.Error("Expected error")
 		return
 	}
 
-	err = ethereumSym.MockNewBoundContract(testContract, testContractId, true, false)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	err = ethereumSym.MockNewBoundContract(testContract, testContractID, true, false)
+	assert.NilError(t, err)
 
-	_, err = client.getContract(testAddress, testContractId, testContractMethodSize)
+	_, err = client.getContract(testAddress, testContractID, testContractMethodSize)
 	if err == nil {
 		t.Error("Expected error")
 		return
 	}
 
-	testContract.MethodDataClientId = testClientId + 10
-	err = ethereumSym.MockNewBoundContract(testContract, testContractId, false, false)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	testContract.MethodDataClientId = testClientID + 10
+	err = ethereumSym.MockNewBoundContract(testContract, testContractID, false, false)
+	assert.NilError(t, err)
 
-	_, err = client.getContract(testAddress, testContractId, testContractMethodSize)
+	_, err = client.getContract(testAddress, testContractID, testContractMethodSize)
 	if err == nil {
 		t.Error("Expected error")
 		return
@@ -83,13 +64,10 @@ func TestGetContract(t *testing.T) {
 		Outputs: []interface{}{},
 	}
 
-	err = ethereumSym.MockNewBoundContract(testContract, testContractId, false, false)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	err = ethereumSym.MockNewBoundContract(testContract, testContractID, false, false)
+	assert.NilError(t, err)
 
-	_, err = client.getContract(testAddress, testContractId, testContractMethodSize)
+	_, err = client.getContract(testAddress, testContractID, testContractMethodSize)
 	if err == nil {
 		t.Error("Expected error")
 		return
@@ -100,39 +78,30 @@ func TestGetContract(t *testing.T) {
 		Outputs: []interface{}{},
 	}
 
-	err = ethereumSym.MockNewBoundContract(testContract, testContractId, false, false)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	err = ethereumSym.MockNewBoundContract(testContract, testContractID, false, false)
+	assert.NilError(t, err)
 
-	_, err = client.getContract(testAddress, testContractId, testContractMethodSize)
+	_, err = client.getContract(testAddress, testContractID, testContractMethodSize)
 	if err == nil {
 		t.Error("Expected error")
 		return
 	}
 
-	testContract.MethodSizeClientId = testClientId + 10
-	err = ethereumSym.MockNewBoundContract(testContract, testContractId, false, false)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	testContract.MethodSizeClientId = testClientID + 10
+	err = ethereumSym.MockNewBoundContract(testContract, testContractID, false, false)
+	assert.NilError(t, err)
 
-	_, err = client.getContract(testAddress, testContractId, testContractMethodSize)
+	_, err = client.getContract(testAddress, testContractID, testContractMethodSize)
 	if err == nil {
 		t.Error("Expected error")
 		return
 	}
 
-	testContract.ContractDataClientId = testClientId + 10
-	err = ethereumSym.MockNewBoundContract(testContract, testContractId, false, false)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	testContract.ContractDataClientId = testClientID + 10
+	err = ethereumSym.MockNewBoundContract(testContract, testContractID, false, false)
+	assert.NilError(t, err)
 
-	_, err = client.getContract(testAddress, testContractId, testContractMethodSize)
+	_, err = client.getContract(testAddress, testContractID, testContractMethodSize)
 	if err == nil {
 		t.Error("Expected error")
 		return
@@ -144,7 +113,7 @@ func TestGetContract(t *testing.T) {
 		return 0
 	}
 
-	_, err = client.getContract(testAddress, testContractId, 11)
+	_, err = client.getContract(testAddress, testContractID, 11)
 	if err == nil {
 		t.Error("Expected error")
 		return
@@ -154,7 +123,7 @@ func TestGetContract(t *testing.T) {
 		return 1
 	}
 
-	_, err = client.getContract(testAddress, testContractId, testContractMethodSize)
+	_, err = client.getContract(testAddress, testContractID, testContractMethodSize)
 	if err == nil {
 		t.Error("Expected error")
 		return
@@ -163,34 +132,19 @@ func TestGetContract(t *testing.T) {
 
 func TestBoundContract(t *testing.T) {
 	err := setTestVars()
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	client, err := newMockClient()
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	reader, err := os.Open("contract_test.go")
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
-	err = ethereumSym.MockNewBoundContract(testContract, testContractId, false, false)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	err = ethereumSym.MockNewBoundContract(testContract, testContractID, false, false)
+	assert.NilError(t, err)
 
 	_, err = client.NewBoundContract(reader, testAddress)
-	if err != nil {
-		t.Errorf("New bound contract failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	reader.Close()
 	_, err = client.NewBoundContract(reader, testAddress)
@@ -199,18 +153,12 @@ func TestBoundContract(t *testing.T) {
 		return
 	}
 
-	testContract.ContractSizeClientId = testClientId + 10
-	err = ethereumSym.MockNewBoundContract(testContract, testContractId, false, false)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	testContract.ContractSizeClientId = testClientID + 10
+	err = ethereumSym.MockNewBoundContract(testContract, testContractID, false, false)
+	assert.NilError(t, err)
 
 	reader, err = os.Open("contract_test.go")
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	_, err = client.NewBoundContract(reader, testAddress)
 	if err == nil {
@@ -233,40 +181,26 @@ func TestBoundContract(t *testing.T) {
 
 func TestDeployContract(t *testing.T) {
 	err := setTestVars()
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	client, err := newMockClient()
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	reader, err := os.Open("contract_test.go")
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
-	err = ethereumSym.MockDeployContract(testContract, testAddress, testTransactionId, testContractId, false, false)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	err = ethereumSym.MockDeployContract(testContract, testAddress, testTransactionID, testContractID, false, false)
+	assert.NilError(t, err)
 
 	byteCode := make([]byte, 1024)
 	rand.Read(byteCode)
 	_byteCode := bytes.NewReader(byteCode)
 
 	contract, tx, err := client.DeployContract(reader, _byteCode, testChain, testBytes)
-	if err != nil {
-		t.Errorf("Deploying contract failed with: %s", err)
-		return
-	}
-	if contract.id != testContractId {
-		t.Errorf("Expected contract id `%d` got `%d`", testContractId, contract.id)
+	assert.NilError(t, err)
+
+	if contract.id != testContractID {
+		t.Errorf("Expected contract id `%d` got `%d`", testContractID, contract.id)
 		return
 	}
 
@@ -275,25 +209,19 @@ func TestDeployContract(t *testing.T) {
 		return
 	}
 
-	if tx.id != testTransactionId {
-		t.Errorf("Expected transaction id `%d` got `%d`", testTransactionId, tx.id)
+	if tx.id != testTransactionID {
+		t.Errorf("Expected transaction id `%d` got `%d`", testTransactionID, tx.id)
 	}
 
 	for _, method := range contract.Methods() {
 		method.Name()
 	}
 
-	err = ethereumSym.MockNewBoundContract(testContract, testContractId, false, true)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	err = ethereumSym.MockNewBoundContract(testContract, testContractID, false, true)
+	assert.NilError(t, err)
 
 	reader, err = os.Open("contract_test.go")
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	_byteCode.Seek(0, io.SeekStart)
 
@@ -303,18 +231,12 @@ func TestDeployContract(t *testing.T) {
 		return
 	}
 
-	testContract.ContractSizeClientId = testClientId + 10
-	err = ethereumSym.MockDeployContract(testContract, testAddress, testTransactionId, testContractId, false, false)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	testContract.ContractSizeClientId = testClientID + 10
+	err = ethereumSym.MockDeployContract(testContract, testAddress, testTransactionID, testContractID, false, false)
+	assert.NilError(t, err)
 
 	reader, err = os.Open("contract_test.go")
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	_byteCode.Seek(0, io.SeekStart)
 
@@ -334,24 +256,15 @@ func TestDeployContract(t *testing.T) {
 		return
 	}
 
-	testContract.ContractDataClientId = testClientId + 10
-	err = ethereumSym.MockDeployContract(testContract, testAddress, testTransactionId, testContractId, false, false)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	testContract.ContractDataClientId = testClientID + 10
+	err = ethereumSym.MockDeployContract(testContract, testAddress, testTransactionID, testContractID, false, false)
+	assert.NilError(t, err)
 
 	reader, err = os.Open("contract_test.go")
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	reader2, err := os.Open("contract_test.go")
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	_, _, err = client.DeployContract(reader, reader2, testChain, testBytes)
 	if err == nil {
@@ -360,10 +273,7 @@ func TestDeployContract(t *testing.T) {
 	}
 
 	reader, err = os.Open("contract_test.go")
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	reader2.Close()
 
@@ -387,11 +297,8 @@ func TestDeployContract(t *testing.T) {
 		return
 	}
 
-	err = ethereumSym.MockCurrentChainId(testClientId+10, testClientId, testChain)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	err = ethereumSym.MockCurrentChainId(testClientID+10, testClientID, testChain)
+	assert.NilError(t, err)
 
 	_byteCode.Seek(0, io.SeekStart)
 

@@ -2,20 +2,16 @@ package ethereum
 
 import (
 	"testing"
+
+	"gotest.tools/assert"
 )
 
 func TestSign(t *testing.T) {
 	privateKey, err := HexToECDSABytes(testPrivateKeyHex)
-	if err != nil {
-		t.Errorf("HexToECDSABytes failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	_, err = SignMessage([]byte("hello world"), privateKey)
-	if err != nil {
-		t.Errorf("Signing message failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	_, err = SignMessage([]byte("hello world"), []byte("hello world"))
 	if err == nil {
@@ -32,27 +28,16 @@ func TestSign(t *testing.T) {
 
 func TestSignatureVerify(t *testing.T) {
 	privateKey, err := HexToECDSABytes(testPrivateKeyHex)
-	if err != nil {
-		t.Errorf("HexToECDSABytes failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	publicKey, err := PublicKeyFromPrivate(privateKey)
-	if err != nil {
-		t.Errorf("getting public key failed with: %s", err)
-	}
+	assert.NilError(t, err)
 
 	signature, err := SignMessage([]byte("hello world"), privateKey)
-	if err != nil {
-		t.Errorf("Signing message failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	err = VerifySignature([]byte("hello world"), publicKey, signature)
-	if err != nil {
-		t.Errorf("Verifying signature failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	err = VerifySignature([]byte("helloworld"), publicKey, []byte{1, 2, 3})
 	if err == nil {
@@ -99,8 +84,6 @@ func TestVerifySignInputs(t *testing.T) {
 		return
 	}
 
-	if err := verifySignInputs(testBytes, testBytes, nil, false, false); err != nil {
-		t.Errorf("verifySignInputs failed with: %s", err)
-		return
-	}
+	err := verifySignInputs(testBytes, testBytes, nil, false, false)
+	assert.NilError(t, err)
 }

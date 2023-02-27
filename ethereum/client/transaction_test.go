@@ -7,23 +7,18 @@ import (
 	"testing"
 
 	ethereumSym "github.com/taubyte/go-sdk-symbols/ethereum/client"
+	"gotest.tools/assert"
 )
 
 func TestTransactionNonce(t *testing.T) {
 	err := setTestVars()
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	tx, _, _, err := newMockTransaction()
-	if err != nil {
-		t.Errorf("Getting mock transaction failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	expectedU16 := rand.Uint64()
-	ethereumSym.MockU64method(testClientId+10, expectedU16)
+	ethereumSym.MockU64method(testClientID+10, expectedU16)
 
 	nonce, err := tx.Nonce()
 	if err == nil {
@@ -31,12 +26,10 @@ func TestTransactionNonce(t *testing.T) {
 		return
 	}
 
-	ethereumSym.MockU64method(testClientId, expectedU16)
+	ethereumSym.MockU64method(testClientID, expectedU16)
 	nonce, err = tx.Nonce()
-	if err != nil {
-		t.Errorf("Getting nonce failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
+
 	if nonce != expectedU16 {
 		t.Errorf("Expected nonce `%d` got `%d`", expectedU16, nonce)
 		return
@@ -56,19 +49,13 @@ func TestTransactionNonce(t *testing.T) {
 
 func TestBytesMethod(t *testing.T) {
 	err := setTestVars()
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	bigInt := big.NewInt(rand.Int63())
-	ethereumSym.MockBytesMethod(testClientId, testClientId+10, bigInt.Bytes())
+	ethereumSym.MockBytesMethod(testClientID, testClientID+10, bigInt.Bytes())
 
 	tx, _, _, err := newMockTransaction()
-	if err != nil {
-		t.Errorf("Getting mock transaction failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	_, err = tx.callBytesMethod("")
 	if err == nil {
@@ -76,19 +63,16 @@ func TestBytesMethod(t *testing.T) {
 		return
 	}
 
-	ethereumSym.MockBytesMethod(testClientId, testClientId+10, big.NewInt(0).Bytes())
+	ethereumSym.MockBytesMethod(testClientID, testClientID+10, big.NewInt(0).Bytes())
 
 	data, err := tx.callBytesMethod("")
-	if err != nil {
-		t.Errorf("call bytes method failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 	if data != nil {
 		t.Errorf("expected nil data")
 		return
 	}
 
-	ethereumSym.MockBytesMethod(testClientId+10, testClientId, big.NewInt(0).Bytes())
+	ethereumSym.MockBytesMethod(testClientID+10, testClientID, big.NewInt(0).Bytes())
 
 	_, err = tx.callBytesMethod("")
 	if err == nil {
@@ -96,12 +80,9 @@ func TestBytesMethod(t *testing.T) {
 		return
 	}
 
-	ethereumSym.MockBytesMethod(testClientId, testClientId, bigInt.Bytes())
+	ethereumSym.MockBytesMethod(testClientID, testClientID, bigInt.Bytes())
 	data, err = tx.callBytesMethod("")
-	if err != nil {
-		t.Errorf("mock bytes method failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	if bytes.Compare(data, bigInt.Bytes()) != 0 {
 		t.Error("Sent and received data are not the same")
@@ -111,20 +92,14 @@ func TestBytesMethod(t *testing.T) {
 
 func TestGasPrice(t *testing.T) {
 	err := setTestVars()
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	testGasPrice := big.NewInt(rand.Int63())
 
 	tx, _, _, err := newMockTransaction()
-	if err != nil {
-		t.Errorf("Getting mock transaction failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
-	ethereumSym.MockBytesMethod(testClientId+10, testClientId, testGasPrice.Bytes())
+	ethereumSym.MockBytesMethod(testClientID+10, testClientID, testGasPrice.Bytes())
 
 	gasPrice, err := tx.GasPrice()
 	if err == nil {
@@ -132,13 +107,10 @@ func TestGasPrice(t *testing.T) {
 		return
 	}
 
-	ethereumSym.MockBytesMethod(testClientId, testClientId, testGasPrice.Bytes())
+	ethereumSym.MockBytesMethod(testClientID, testClientID, testGasPrice.Bytes())
 
 	gasPrice, err = tx.GasPrice()
-	if err != nil {
-		t.Errorf("Getting mock gas price failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	if gasPrice.Cmp(testGasPrice) != 0 {
 		t.Errorf("Expected gas price `%d` got `%d`", testGasPrice, gasPrice)
@@ -146,10 +118,7 @@ func TestGasPrice(t *testing.T) {
 	}
 
 	gasPrice, err = tx.GasPrice()
-	if err != nil {
-		t.Errorf("Getting mock gas price failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	if gasPrice.Cmp(testGasPrice) != 0 {
 		t.Errorf("Expected gas price `%d` got `%d`", testGasPrice, gasPrice)
@@ -160,20 +129,14 @@ func TestGasPrice(t *testing.T) {
 
 func TestGasTipCap(t *testing.T) {
 	err := setTestVars()
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	testGasTipCap := big.NewInt(rand.Int63())
 
 	tx, _, _, err := newMockTransaction()
-	if err != nil {
-		t.Errorf("Getting mock transaction failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
-	ethereumSym.MockBytesMethod(testClientId+10, testClientId, testGasTipCap.Bytes())
+	ethereumSym.MockBytesMethod(testClientID+10, testClientID, testGasTipCap.Bytes())
 
 	gasTipCap, err := tx.GasTipCap()
 	if err == nil {
@@ -181,13 +144,10 @@ func TestGasTipCap(t *testing.T) {
 		return
 	}
 
-	ethereumSym.MockBytesMethod(testClientId, testClientId, testGasTipCap.Bytes())
+	ethereumSym.MockBytesMethod(testClientID, testClientID, testGasTipCap.Bytes())
 
 	gasTipCap, err = tx.GasTipCap()
-	if err != nil {
-		t.Errorf("Getting mock gas tip cap failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	if gasTipCap.Cmp(testGasTipCap) != 0 {
 		t.Errorf("Expected gas tip cap `%d` got `%d`", testGasTipCap, gasTipCap)
@@ -195,10 +155,7 @@ func TestGasTipCap(t *testing.T) {
 	}
 
 	gasTipCap, err = tx.GasTipCap()
-	if err != nil {
-		t.Errorf("Getting mock gas tip cap failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	if gasTipCap.Cmp(testGasTipCap) != 0 {
 		t.Errorf("Expected gas tip cap `%d` got `%d`", testGasTipCap, gasTipCap)
@@ -209,20 +166,13 @@ func TestGasTipCap(t *testing.T) {
 
 func TestGasFeeCap(t *testing.T) {
 	err := setTestVars()
-	if err != nil {
-		t.Error(err)
-		return
-	}
-
+	assert.NilError(t, err)
 	testGasFeeCap := big.NewInt(rand.Int63())
 
 	tx, _, _, err := newMockTransaction()
-	if err != nil {
-		t.Errorf("Getting mock transaction failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
-	ethereumSym.MockBytesMethod(testClientId+10, testClientId, testGasFeeCap.Bytes())
+	ethereumSym.MockBytesMethod(testClientID+10, testClientID, testGasFeeCap.Bytes())
 
 	gasFeeCap, err := tx.GasFeeCap()
 	if err == nil {
@@ -230,13 +180,10 @@ func TestGasFeeCap(t *testing.T) {
 		return
 	}
 
-	ethereumSym.MockBytesMethod(testClientId, testClientId, testGasFeeCap.Bytes())
+	ethereumSym.MockBytesMethod(testClientID, testClientID, testGasFeeCap.Bytes())
 
 	gasFeeCap, err = tx.GasFeeCap()
-	if err != nil {
-		t.Errorf("Getting mock gas fee cap failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	if gasFeeCap.Cmp(testGasFeeCap) != 0 {
 		t.Errorf("Expected gas tip cap `%d` got `%d`", testGasFeeCap, gasFeeCap)
@@ -244,10 +191,7 @@ func TestGasFeeCap(t *testing.T) {
 	}
 
 	gasFeeCap, err = tx.GasFeeCap()
-	if err != nil {
-		t.Errorf("Getting mock gas fee cap failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	if gasFeeCap.Cmp(testGasFeeCap) != 0 {
 		t.Errorf("Expected gas tip cap `%d` got `%d`", testGasFeeCap, gasFeeCap)
@@ -258,18 +202,12 @@ func TestGasFeeCap(t *testing.T) {
 
 func TestTransactionGas(t *testing.T) {
 	err := setTestVars()
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	tx, _, _, err := newMockTransaction()
-	if err != nil {
-		t.Errorf("Getting mock transaction failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
-	ethereumSym.MockU64method(testClientId+10, 5)
+	ethereumSym.MockU64method(testClientID+10, 5)
 
 	gas, err := tx.Gas()
 	if err == nil {
@@ -278,22 +216,16 @@ func TestTransactionGas(t *testing.T) {
 	}
 
 	expectedU64 := rand.Uint64()
-	ethereumSym.MockU64method(testClientId, expectedU64)
+	ethereumSym.MockU64method(testClientID, expectedU64)
 	gas, err = tx.Gas()
-	if err != nil {
-		t.Errorf("Getting gas failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 	if gas != expectedU64 {
 		t.Errorf("Expected gas `%d` got `%d`", expectedU64, gas)
 		return
 	}
 
 	gas, err = tx.Gas()
-	if err != nil {
-		t.Errorf("Getting gas failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 	if gas != expectedU64 {
 		t.Errorf("Expected gas `%d` got `%d`", expectedU64, gas)
 		return
@@ -303,20 +235,14 @@ func TestTransactionGas(t *testing.T) {
 
 func TestValue(t *testing.T) {
 	err := setTestVars()
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	testValue := big.NewInt(rand.Int63())
 
 	tx, _, _, err := newMockTransaction()
-	if err != nil {
-		t.Errorf("Getting mock transaction failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
-	ethereumSym.MockBytesMethod(testClientId+10, testClientId, testValue.Bytes())
+	ethereumSym.MockBytesMethod(testClientID+10, testClientID, testValue.Bytes())
 
 	value, err := tx.Value()
 	if err == nil {
@@ -324,13 +250,10 @@ func TestValue(t *testing.T) {
 		return
 	}
 
-	ethereumSym.MockBytesMethod(testClientId, testClientId, testValue.Bytes())
+	ethereumSym.MockBytesMethod(testClientID, testClientID, testValue.Bytes())
 
 	value, err = tx.Value()
-	if err != nil {
-		t.Errorf("Getting value failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	if value.Cmp(testValue) != 0 {
 		t.Errorf("Expected value `%d` got `%d`", testValue, value)
@@ -338,10 +261,7 @@ func TestValue(t *testing.T) {
 	}
 
 	value, err = tx.Value()
-	if err != nil {
-		t.Errorf("Getting value failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	if value.Cmp(testValue) != 0 {
 		t.Errorf("Expected value `%d` got `%d`", testValue, value)
@@ -352,21 +272,15 @@ func TestValue(t *testing.T) {
 
 func TestData(t *testing.T) {
 	err := setTestVars()
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	testBytes := make([]byte, 1)
 	rand.Read(testBytes)
 
 	tx, _, _, err := newMockTransaction()
-	if err != nil {
-		t.Errorf("Getting mock transaction failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
-	ethereumSym.MockBytesMethod(testClientId+10, testClientId, testBytes)
+	ethereumSym.MockBytesMethod(testClientID+10, testClientID, testBytes)
 
 	data, err := tx.Data()
 	if err == nil {
@@ -374,13 +288,10 @@ func TestData(t *testing.T) {
 		return
 	}
 
-	ethereumSym.MockBytesMethod(testClientId, testClientId, testBytes)
+	ethereumSym.MockBytesMethod(testClientID, testClientID, testBytes)
 
 	data, err = tx.Data()
-	if err != nil {
-		t.Errorf("Getting data failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	if bytes.Compare(data, testBytes) != 0 {
 		t.Error("sent data nad received data are not the same")
@@ -388,10 +299,7 @@ func TestData(t *testing.T) {
 	}
 
 	data, err = tx.Data()
-	if err != nil {
-		t.Errorf("Getting value failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	if bytes.Compare(data, testBytes) != 0 {
 		t.Error("sent data nad received data are not the same")
@@ -401,18 +309,12 @@ func TestData(t *testing.T) {
 
 func TestAddress(t *testing.T) {
 	err := setTestVars()
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	tx, _, _, err := newMockTransaction()
-	if err != nil {
-		t.Errorf("Getting mock transaction failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
-	ethereumSym.MockBytesMethod(testClientId+10, testClientId+10, testAddressBytes)
+	ethereumSym.MockBytesMethod(testClientID+10, testClientID+10, testAddressBytes)
 
 	address, err := tx.ToAddress()
 	if err == nil {
@@ -420,13 +322,10 @@ func TestAddress(t *testing.T) {
 		return
 	}
 
-	ethereumSym.MockBytesMethod(testClientId, testClientId, testAddressBytes)
+	ethereumSym.MockBytesMethod(testClientID, testClientID, testAddressBytes)
 
 	address, err = tx.ToAddress()
-	if err != nil {
-		t.Errorf("Getting address failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	if bytes.Compare(address, testAddressBytes) != 0 {
 		t.Error("sent address and received address are not the same")
@@ -434,10 +333,7 @@ func TestAddress(t *testing.T) {
 	}
 
 	address, err = tx.ToAddress()
-	if err != nil {
-		t.Errorf("Getting value failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	if bytes.Compare(address, testAddressBytes) != 0 {
 		t.Error("sent address and received address are not the same")
@@ -447,18 +343,12 @@ func TestAddress(t *testing.T) {
 
 func TestChain(t *testing.T) {
 	err := setTestVars()
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	tx, _, _, err := newMockTransaction()
-	if err != nil {
-		t.Errorf("Getting mock transaction failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
-	ethereumSym.MockBytesMethod(testClientId+10, testClientId+10, testChain.Bytes())
+	ethereumSym.MockBytesMethod(testClientID+10, testClientID+10, testChain.Bytes())
 
 	chain, err := tx.Chain()
 	if err == nil {
@@ -466,13 +356,10 @@ func TestChain(t *testing.T) {
 		return
 	}
 
-	ethereumSym.MockBytesMethod(testClientId, testClientId, testChain.Bytes())
+	ethereumSym.MockBytesMethod(testClientID, testClientID, testChain.Bytes())
 
 	chain, err = tx.Chain()
-	if err != nil {
-		t.Errorf("Getting chain failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	if chain.Cmp(testChain) != 0 {
 		t.Errorf("Expected chain `%d` got `%d`", testChain, chain)
@@ -480,10 +367,7 @@ func TestChain(t *testing.T) {
 	}
 
 	chain, err = tx.Chain()
-	if err != nil {
-		t.Errorf("Getting chain failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	if chain.Cmp(testChain) != 0 {
 		t.Errorf("Expected chain `%d` got `%d`", testChain, chain)
@@ -493,36 +377,27 @@ func TestChain(t *testing.T) {
 
 func TestHash(t *testing.T) {
 	err := setTestVars()
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	testBytes := make([]byte, 1)
 	rand.Read(testBytes)
 
 	tx, _, _, err := newMockTransaction()
-	if err != nil {
-		t.Errorf("Getting mock transaction failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	tx.hash = nil
 
-	ethereumSym.MockBytesMethod(testClientId+10, testClientId+10, testBytes)
+	ethereumSym.MockBytesMethod(testClientID+10, testClientID+10, testBytes)
 	hash, err := tx.Hash()
 	if err == nil {
 		t.Error("Expected error")
 		return
 	}
 
-	ethereumSym.MockBytesMethod(testClientId, testClientId, testBytes)
+	ethereumSym.MockBytesMethod(testClientID, testClientID, testBytes)
 
 	hash, err = tx.Hash()
-	if err != nil {
-		t.Errorf("Getting hash failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	if bytes.Compare(hash, testBytes) != 0 {
 		t.Error("sent hash and received hash are not the same")
@@ -530,10 +405,7 @@ func TestHash(t *testing.T) {
 	}
 
 	hash, err = tx.Hash()
-	if err != nil {
-		t.Errorf("Getting hash failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	if bytes.Compare(hash, testBytes) != 0 {
 		t.Error("sent hash and received data are not the same")
@@ -543,26 +415,17 @@ func TestHash(t *testing.T) {
 
 func TestSend(t *testing.T) {
 	err := setTestVars()
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	tx, _, _, err := newMockTransaction()
-	if err != nil {
-		t.Errorf("Getting mock transaction failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
-	ethereumSym.MockSendTransaction(testClientId)
+	ethereumSym.MockSendTransaction(testClientID)
 
 	err = tx.Send()
-	if err != nil {
-		t.Errorf("Sending mock transaction failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
-	ethereumSym.MockSendTransaction(testClientId + 10)
+	ethereumSym.MockSendTransaction(testClientID + 10)
 
 	err = tx.Send()
 	if err == nil {
@@ -573,16 +436,13 @@ func TestSend(t *testing.T) {
 
 func TestRawSignatures(t *testing.T) {
 	tx, _, _, err := newMockTransaction()
-	if err != nil {
-		t.Errorf("Getting mock transaction failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	rSig := big.NewInt(rand.Int63())
 	vSig := big.NewInt(rand.Int63())
 	sSig := big.NewInt(rand.Int63())
 
-	ethereumSym.MockRawSignatures(testClientId, testClientId+10, vSig, rSig, sSig)
+	ethereumSym.MockRawSignatures(testClientID, testClientID+10, vSig, rSig, sSig)
 
 	_, err = tx.RawSignatures()
 	if err == nil {
@@ -590,7 +450,7 @@ func TestRawSignatures(t *testing.T) {
 		return
 	}
 
-	ethereumSym.MockRawSignatures(testClientId+10, testClientId, vSig, rSig, sSig)
+	ethereumSym.MockRawSignatures(testClientID+10, testClientID, vSig, rSig, sSig)
 
 	_, err = tx.RawSignatures()
 	if err == nil {
@@ -598,13 +458,10 @@ func TestRawSignatures(t *testing.T) {
 		return
 	}
 
-	ethereumSym.MockRawSignatures(testClientId, testClientId, vSig, rSig, sSig)
+	ethereumSym.MockRawSignatures(testClientID, testClientID, vSig, rSig, sSig)
 
 	rawSigs, err := tx.RawSignatures()
-	if err != nil {
-		t.Errorf("Getting mock raw signatures failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	if vSig.Cmp(rawSigs.VSig) != 0 {
 		t.Error("vsigs are not the same")
@@ -622,10 +479,7 @@ func TestRawSignatures(t *testing.T) {
 	}
 
 	rawSigs, err = tx.RawSignatures()
-	if err != nil {
-		t.Errorf("Getting mock raw signatures failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	if vSig.Cmp(rawSigs.VSig) != 0 {
 		t.Error("vsigs are not the same")
