@@ -1,11 +1,11 @@
-package i2mv_test
+package memoryView_test
 
 import (
 	"fmt"
 	"io"
 
-	symbols "github.com/taubyte/go-sdk-symbols/i2mv"
-	"github.com/taubyte/go-sdk/i2mv"
+	symbols "github.com/taubyte/go-sdk-symbols/i2mv/memoryView"
+	i2mv "github.com/taubyte/go-sdk/i2mv/memoryView"
 )
 
 var mvCloser io.Closer
@@ -30,7 +30,7 @@ func ExampleNew() {
 
 func ExampleOpen() {
 	// Mocking the calls to the vm for usage in tests and playground
-	symbols.MockSize(5)
+	symbols.MockSize(5, true)
 
 	mv, err := i2mv.Open(0)
 	if err != nil {
@@ -44,7 +44,7 @@ func ExampleOpen() {
 
 func ExampleMemoryView_Read() {
 	// Mocking the calls to the vm for usage in tests and playground
-	symbols.MockSize(5)
+	symbols.MockSize(5, true)
 	symbols.MockRead(1)
 
 	mv, err := i2mv.Open(1)
@@ -71,7 +71,7 @@ func ExampleMemoryView_Read() {
 
 func ExampleMemoryView_Seek() {
 	// Mocking the calls to the vm for usage in tests and playground
-	symbols.MockSize(5)
+	symbols.MockSize(5, true)
 
 	mv, err := i2mv.Open(1)
 	if err != nil {
@@ -91,8 +91,7 @@ func ExampleMemoryView_Seek() {
 
 func ExampleMemoryView_Close() {
 	// Mocking the calls to the vm for usage in tests and playground
-	symbols.MockSize(5)
-	symbols.MockClose(true)
+	symbols.MockSize(5, true)
 
 	mv, err := i2mv.Open(1)
 	if err != nil {

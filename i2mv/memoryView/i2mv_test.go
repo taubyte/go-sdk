@@ -1,10 +1,10 @@
-package i2mv
+package memoryView
 
 import (
 	"io"
 	"testing"
 
-	symbols "github.com/taubyte/go-sdk-symbols/i2mv"
+	symbols "github.com/taubyte/go-sdk-symbols/i2mv/memoryView"
 )
 
 func TestNew(t *testing.T) {
@@ -38,7 +38,7 @@ func TestOpen(t *testing.T) {
 	// Success
 	var testId uint32 = 1
 	var testSize uint32 = 4
-	symbols.MockSize(testSize)
+	symbols.MockSize(testSize, true)
 
 	mv, err := Open(testId)
 	if err != nil {
@@ -61,7 +61,7 @@ func TestOpen(t *testing.T) {
 	}
 
 	// Failure
-	symbols.MockSize(0)
+	symbols.MockSize(0, true)
 
 	if _, err = Open(0); err == nil {
 		t.Errorf("expected error")
@@ -72,7 +72,7 @@ func TestOpen(t *testing.T) {
 func TestRead(t *testing.T) {
 	var testId uint32 = 1
 	var testSize uint32 = 4
-	symbols.MockSize(testSize)
+	symbols.MockSize(testSize, true)
 	symbols.MockRead(testId)
 
 	// Successes
@@ -111,7 +111,7 @@ func TestRead(t *testing.T) {
 func TestSeek(t *testing.T) {
 	var testId uint32 = 1
 	var testSize uint32 = 4
-	symbols.MockSize(testSize)
+	symbols.MockSize(testSize, true)
 
 	mv, err := Open(testId)
 	if err != nil {
@@ -151,7 +151,7 @@ func TestSeek(t *testing.T) {
 func TestClose(t *testing.T) {
 	var testId uint32 = 1
 	var testSize uint32 = 4
-	symbols.MockSize(testSize)
+	symbols.MockSize(testSize, true)
 
 	mv, err := Open(testId)
 	if err != nil {
@@ -159,14 +159,19 @@ func TestClose(t *testing.T) {
 		return
 	}
 
-	symbols.MockClose(true)
-
 	if err := mv.Close(); err != nil {
 		t.Errorf("closing memory view failed with: %s", err)
 		return
 	}
 
-	symbols.MockClose(false)
+	symbols.MockSize(testSize, false)
+
+	mv, err = Open(testId)
+	if err != nil {
+		t.Errorf("opening memory view failed with: %s", err)
+		return
+	}
+
 	if err := mv.Close(); err == nil {
 		t.Error("expected error")
 	}

@@ -1,19 +1,22 @@
-package i2mv
+package memoryView
 
 import (
 	"errors"
 	"fmt"
 	"io"
 
-	symbols "github.com/taubyte/go-sdk-symbols/i2mv"
+	symbols "github.com/taubyte/go-sdk-symbols/i2mv/memoryView"
+	"github.com/taubyte/go-sdk/utils/booleans"
 )
 
 func Open(id uint32) (MemoryView, error) {
 	var size uint32
-	if err := symbols.MemoryViewSize(id, &size); err != 0 {
+	var closable uint32
+	if err := symbols.MemoryViewSize(id, &closable, &size); err != 0 {
 		return nil, fmt.Errorf("getting memory view size failed with: %s", err)
 	}
-	return &memoryView{id: id, size: size}, nil
+
+	return &memoryView{id: id, size: size, closable: booleans.ToBool(closable)}, nil
 }
 
 func (m *memoryView) Id() uint32 {
@@ -31,7 +34,7 @@ func (m *memoryView) Size() uint32 {
 func (m *memoryView) Read(p []byte) (int, error) {
 	var n uint32
 	if len(p) == 0 {
-		return 0, fmt.Errorf("Cannot read to nil bytes")
+		return 0, errors.New("cannot read to nil bytes")
 	}
 
 	if m.offset >= int64(m.size) {
@@ -72,9 +75,10 @@ func (m *memoryView) Seek(offSet int64, whence int) (int64, error) {
 }
 
 func (m *memoryView) Close() error {
-	if err := symbols.MemoryViewClose(m.id); err != 0 {
-		return fmt.Errorf("closing memory view failed with: %s", err)
+	if m.closable {
+		symbols.MemoryViewClose(m.id)
+		return nil
 	}
 
-	return nil
+	return fmt.Errorf("memoryView `%d` not closable", m.id)
 }
