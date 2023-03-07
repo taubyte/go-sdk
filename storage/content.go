@@ -32,7 +32,7 @@ func Open(_cid cid.Cid) (ReadOnlyContent, error) {
 		return nil, err
 	}
 
-	err0 := storageSym.StorageOpenCid(&content.Id, writer.Ptr(), writer.Len())
+	err0 := storageSym.StorageOpenCid(&content.Id, writer.Ptr())
 	if err0 != 0 {
 		return nil, fmt.Errorf("Failed opening cid %s with %v", _cid.String(), err0)
 	}

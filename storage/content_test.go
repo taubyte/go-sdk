@@ -108,7 +108,7 @@ func TestContentError(t *testing.T) {
 		return
 	}
 
-	symbols.StorageOpenCid = func(contentIdPtr *uint32, cid *byte, cidSize uint32) (error errno.Error) {
+	symbols.StorageOpenCid = func(contentIdPtr *uint32, cid *byte) (error errno.Error) {
 		return 1
 	}
 

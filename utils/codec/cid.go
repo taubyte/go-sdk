@@ -48,7 +48,3 @@ func CidWriter(cid cid.Cid) (*cidWriter, error) {
 func (w *cidWriter) Ptr() *byte {
 	return &w.data[0]
 }
-
-func (w *cidWriter) Len() uint32 {
-	return uint32(len(w.data))
-}

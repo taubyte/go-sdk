@@ -32,7 +32,7 @@ func (c Client) Open(_cid cid.Cid) (ReadOnlyContent, error) {
 		return nil, err
 	}
 
-	err0 := ipfsClientSym.IpfsOpenFile(uint32(c), &content.id, writer.Ptr(), writer.Len())
+	err0 := ipfsClientSym.IpfsOpenFile(uint32(c), &content.id, writer.Ptr())
 	if err0 != 0 {
 		return nil, fmt.Errorf("opening file from cid `%s` failed with: %v", _cid.String(), err)
 	}
