@@ -8,6 +8,7 @@ import (
 	"github.com/ipfs/go-cid"
 	ipfsClientSym "github.com/taubyte/go-sdk-symbols/ipfs/client"
 	"github.com/taubyte/go-sdk/errno"
+	"github.com/taubyte/go-sdk/utils/codec"
 )
 
 // Write writes the passed in data into the file.
@@ -35,19 +36,14 @@ func (c *Content) Close() error {
 
 // Cid returns the cid of the file and an error.
 func (c *Content) Cid() (cid.Cid, error) {
-	_cid := make([]byte, CidBufferSize)
 
-	err0 := ipfsClientSym.IpfsFileCid(uint32(c.client), c.id, &_cid[0])
+	_cid := codec.CidReader()
+	err0 := ipfsClientSym.IpfsFileCid(uint32(c.client), c.id, _cid.Ptr())
 	if err0 != 0 {
 		return cid.Cid{}, fmt.Errorf("Failed getting cid with %v", err0)
 	}
 
-	_, cidFromBytes, err := cid.CidFromBytes(_cid)
-	if err != nil {
-		return cid.Cid{}, fmt.Errorf("Failed decoding cid with: %v", err)
-	}
-
-	return cidFromBytes, err
+	return _cid.Parse()
 }
 
 func (c *Content) Read(p []byte) (int, error) {
@@ -94,19 +90,14 @@ func (c *Content) Push() (cid.Cid, error) {
 		return cid.Cid{}, fmt.Errorf("Failed seeking 0, 0 of content with: %v", err)
 	}
 
-	_cid := make([]byte, CidBufferSize)
-	err0 := ipfsClientSym.IpfsPushFile(uint32(c.client), c.id, &_cid[0])
+	_cid := codec.CidReader()
+	err0 := ipfsClientSym.IpfsPushFile(uint32(c.client), c.id, _cid.Ptr())
 	if err0 != 0 {
 		return cid.Cid{}, fmt.Errorf("Failed reading content with: %v", err0)
-	}
-
-	_, cidFromBytes, err := cid.CidFromBytes(_cid)
-	if err != nil {
-		return cid.Cid{}, fmt.Errorf("Failed decoding cid with: %v", err)
 	}
 
 	// Closing content so it cannot be modified
 	c.Close()
 
-	return cidFromBytes, nil
+	return _cid.Parse()
 }

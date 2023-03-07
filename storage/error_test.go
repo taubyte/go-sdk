@@ -51,30 +51,6 @@ func TestStorageErrors(t *testing.T) {
 		return
 	}
 
-	symbols.StorageCidSize = func(storageId uint32, fileName string, idPtr *uint32) (error errno.Error) {
-		return 1
-	}
-
-	_, err = testStorage.Cid("failFile")
-	if err == nil {
-		t.Error("Expected error")
-		return
-	}
-
-	symbols.StorageCidSize = func(storageId uint32, fileName string, idPtr *uint32) (error errno.Error) {
-		return 0
-	}
-
-	symbols.StorageCid = func(cidPtr *byte, idPtr *uint32) (error errno.Error) {
-		return 1
-	}
-
-	_, err = testStorage.Cid("failFile")
-	if err == nil {
-		t.Error("Expected error")
-		return
-	}
-
 	var file storage.File
 	err = file.Delete()
 	if err == nil {
