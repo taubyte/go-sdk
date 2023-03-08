@@ -11,7 +11,10 @@ require (
 	golang.org/x/crypto v0.1.0
 	golang.org/x/exp v0.0.0-20221026153819-32f3d567a233
 	gotest.tools v2.2.0+incompatible
+	gotest.tools/v3 v3.4.0
 )
+
+replace github.com/taubyte/go-sdk-symbols => ../go-sdk-symbols
 
 // Indirect imports
 require (
