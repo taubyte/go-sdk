@@ -14,8 +14,6 @@ require (
 	gotest.tools/v3 v3.4.0
 )
 
-replace github.com/taubyte/go-sdk-symbols => ../go-sdk-symbols
-
 // Indirect imports
 require (
 	github.com/btcsuite/btcd/btcec/v2 v2.2.0 // indirect
