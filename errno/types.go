@@ -125,9 +125,9 @@ const (
 	ErrorRandRead
 	ErrorMemoryViewNotFound
 	ErrorMemoryViewNotCloser
-	ErrorFifoNotFound
-	ErrorFifoDatatypeInvalid
 	ErrorSeekMethodNotFound
 	ErrorInvalidBool
+	ErrorFifoNotFound
+	ErrorFifoDatatypeInvalid
 	ErrorCap
 )
