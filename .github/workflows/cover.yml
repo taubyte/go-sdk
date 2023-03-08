@@ -1,0 +1,25 @@
+name: Go Coverage
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+permissions:
+  contents: read
+jobs:  
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - run: go test -v ./... -coverprofile cover.out -coverpkg ./...
+    - uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        name: codecov-umbrella
+        flags: unittests
+        fail_ci_if_error: true
+        verbose: true
+        files: ./cover.out
