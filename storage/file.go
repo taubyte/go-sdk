@@ -43,5 +43,6 @@ func (file *StorageFile) Close() error {
 	if err != 0 {
 		return fmt.Errorf("Closing file failed with: %s", err)
 	}
+
 	return nil
 }

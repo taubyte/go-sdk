@@ -56,7 +56,7 @@ func TestMethods(t *testing.T) {
 		return
 	}
 
-	symbols.IpfsOpenFile = func(clientId uint32, contentIdPtr *uint32, cid *byte, cidSize uint32) (error errno.Error) {
+	symbols.IpfsOpenFile = func(clientId uint32, contentIdPtr *uint32, cid *byte) (error errno.Error) {
 		return 1
 	}
 	_, err = trueClient.Open(cid)

@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/ipfs/go-cid"
 	storageSym "github.com/taubyte/go-sdk-symbols/storage"
 	"github.com/taubyte/go-sdk/utils/codec"
 )
@@ -60,21 +61,15 @@ func (s Storage) ListFiles() ([]File, error) {
 
 // Cid looks up the given filename in the given storage.
 // Returns the cid corresponding to the file if found and an error.
-func (s Storage) Cid(fileName string) (string, error) {
-	var idPtr uint32
+func (s Storage) Cid(fileName string) (cid.Cid, error) {
+	_cid := codec.CidReader()
 
-	err := storageSym.StorageCidSize(uint32(s), fileName, &idPtr)
-	if err != 0 {
-		return "", fmt.Errorf("Failed getting cid size for %s with %v", fileName, err)
+	err0 := storageSym.StorageCid(uint32(s), fileName, _cid.Ptr())
+	if err0 != 0 {
+		return cid.Cid{}, fmt.Errorf("Failed getting cid for %s with %v", fileName, err0)
 	}
 
-	__cid := make([]byte, 59)
-	err = storageSym.StorageCid(&__cid[0], &idPtr)
-	if err != 0 {
-		return "", fmt.Errorf("Failed getting cid for %s with %v", fileName, err)
-	}
-
-	return string(__cid), nil
+	return _cid.Parse()
 }
 
 // File uses the name passed in and creates a new instance of File that holds the storage and filename.
