@@ -3,6 +3,7 @@ package database_test
 import (
 	"fmt"
 	"reflect"
+	"sort"
 
 	symbols "github.com/taubyte/go-sdk-symbols/database"
 	"github.com/taubyte/go-sdk/database"
@@ -80,6 +81,8 @@ func ExampleDatabase_List() {
 	}
 
 	expected := []string{"someKey/a", "someKey/bb", "someKey/cccd"}
+	sort.Strings(expected)
+	sort.Strings(data)
 
 	if reflect.DeepEqual(data, expected) == false {
 		return
