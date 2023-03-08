@@ -127,5 +127,7 @@ const (
 	ErrorMemoryViewNotCloser
 	ErrorSeekMethodNotFound
 	ErrorInvalidBool
+	ErrorFifoNotFound
+	ErrorFifoDatatypeInvalid
 	ErrorCap
 )

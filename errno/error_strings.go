@@ -117,5 +117,7 @@ var errorStrings = []string{
 	"ErrorMemoryViewNotCloser",
 	"ErrorSeekMethodNotFound",
 	"ErrorInvalidBool",
+	"ErrorFifoNotFound",
+	"ErrorFifoDatatypeInvalid",
 	"ErrorCap",
 }
