@@ -23,5 +23,3 @@ type ReadOnlyContent interface {
 	io.ReadSeekCloser
 	Cid() (cid.Cid, error)
 }
-
-const CidBufferSize = 64

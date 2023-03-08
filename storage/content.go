@@ -8,6 +8,7 @@ import (
 	"github.com/ipfs/go-cid"
 	storageSym "github.com/taubyte/go-sdk-symbols/storage"
 	"github.com/taubyte/go-sdk/errno"
+	"github.com/taubyte/go-sdk/utils/codec"
 )
 
 // Create creates and returns the new content.
@@ -26,14 +27,14 @@ func Create() (ReadWriteContent, error) {
 func Open(_cid cid.Cid) (ReadOnlyContent, error) {
 	content := &Content{}
 
-	cidBytes := _cid.Bytes()
-	if cidBytes == nil || len(cidBytes) == 0 {
-		return nil, errors.New("Invalid cid")
+	writer, err := codec.CidWriter(_cid)
+	if err != nil {
+		return nil, err
 	}
 
-	err := storageSym.StorageOpenCid(&content.Id, &cidBytes[0], uint32(len(cidBytes)))
-	if err != 0 {
-		return nil, fmt.Errorf("Failed opening cid %s with %v", _cid.String(), err)
+	err0 := storageSym.StorageOpenCid(&content.Id, writer.Ptr())
+	if err0 != 0 {
+		return nil, fmt.Errorf("Failed opening cid %s with %v", _cid.String(), err0)
 	}
 
 	return content, nil
@@ -68,18 +69,14 @@ func (c *Content) Close() error {
 
 // Cid returns the cid of the file and an error.
 func (c *Content) Cid() (cid.Cid, error) {
-	_cid := make([]byte, CidBufferSize)
-	err0 := storageSym.ContentFileCid(c.Id, &_cid[0])
+	_cid := codec.CidReader()
+
+	err0 := storageSym.ContentFileCid(c.Id, _cid.Ptr())
 	if err0 != 0 {
 		return cid.Cid{}, fmt.Errorf("Failed getting cid with %v", err0)
 	}
 
-	_, cidFromBytes, err := cid.CidFromBytes(_cid)
-	if err != nil {
-		return cid.Cid{}, fmt.Errorf("Failed decoding cid with %v", err)
-	}
-
-	return cidFromBytes, nil
+	return _cid.Parse()
 }
 
 // Read reads up to len p in the file.
@@ -110,21 +107,17 @@ func (c *Content) Push() (cid.Cid, error) {
 		return cid.Cid{}, fmt.Errorf("Failed seeking beginning of content with: %v", err0)
 	}
 
-	_cid := make([]byte, CidBufferSize)
-	err := storageSym.ContentPushFile(c.Id, &_cid[0])
+	_cid := codec.CidReader()
+
+	err := storageSym.ContentPushFile(c.Id, _cid.Ptr())
 	if err != 0 {
 		return cid.Cid{}, fmt.Errorf("Failed reading content with %v", err)
-	}
-
-	_, cidFromBytes, err0 := cid.CidFromBytes(_cid)
-	if err0 != nil {
-		return cid.Cid{}, fmt.Errorf("Failed decoding cid with: %v", err0)
 	}
 
 	// Closing content so it cannot be modified
 	c.Close()
 
-	return cidFromBytes, nil
+	return _cid.Parse()
 }
 
 // Seek moves to a position inside the file.
