@@ -119,5 +119,6 @@ var errorStrings = []string{
 	"ErrorInvalidBool",
 	"ErrorFifoNotFound",
 	"ErrorFifoDatatypeInvalid",
+	"ErrorP2PDiscoverFailed",
 	"ErrorCap",
 }
