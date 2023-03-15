@@ -1,11 +1,11 @@
 package client
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/ipfs/go-cid"
 	ipfsClientSym "github.com/taubyte/go-sdk-symbols/ipfs/client"
+	"github.com/taubyte/go-sdk/utils/codec"
 )
 
 // Creates creates and returns the new content.
@@ -27,14 +27,14 @@ func (c Client) Open(_cid cid.Cid) (ReadOnlyContent, error) {
 		client: c,
 	}
 
-	cidBytes := _cid.Bytes()
-	if cidBytes == nil || len(cidBytes) == 0 {
-		return nil, errors.New("Invalid cid")
+	writer, err := codec.CidWriter(_cid)
+	if err != nil {
+		return nil, err
 	}
 
-	err := ipfsClientSym.IpfsOpenFile(uint32(c), &content.id, &cidBytes[0], uint32(len(cidBytes)))
-	if err != 0 {
-		return nil, fmt.Errorf("Failed opening cid %s with: %v", _cid.String(), err)
+	err0 := ipfsClientSym.IpfsOpenFile(uint32(c), &content.id, writer.Ptr())
+	if err0 != 0 {
+		return nil, fmt.Errorf("opening file from cid `%s` failed with: %v", _cid.String(), err)
 	}
 
 	return content, nil

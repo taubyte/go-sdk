@@ -1,4 +1,4 @@
-// This file was generated, do not manually edit. 
+// This file was generated, do not manually edit.
 package errno
 
 var errorStrings = []string{
@@ -120,5 +120,8 @@ var errorStrings = []string{
 	"ErrorMemoryViewNotCloser",
 	"ErrorSeekMethodNotFound",
 	"ErrorInvalidBool",
+	"ErrorFifoNotFound",
+	"ErrorFifoDatatypeInvalid",
+	"ErrorP2PDiscoverFailed",
 	"ErrorCap",
 }

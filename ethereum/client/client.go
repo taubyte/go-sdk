@@ -17,13 +17,13 @@ func New(url string) (Client, error) {
 		return 0, fmt.Errorf("Parsing url failed with: %s", err)
 	}
 
-	var clientId uint32
-	err0 := ethereumSym.EthNew(&clientId, url)
+	var clientID uint32
+	err0 := ethereumSym.EthNew(&clientID, url)
 	if err0 != 0 {
 		return 0, fmt.Errorf("Creating new ethereum client failed with %s", err0)
 	}
 
-	return Client(clientId), nil
+	return Client(clientID), nil
 }
 
 // CurrentBlockNumber returns the most recent block number.
@@ -60,7 +60,7 @@ func (c Client) BlockByNumber(blockNumber *big.Int) (*Block, error) {
 }
 
 // CurrentChainID retrieves the current chain ID for transaction replay protection.
-func (c Client) CurrentChainId() (*big.Int, error) {
+func (c Client) CurrentChainID() (*big.Int, error) {
 	var size uint32
 	if err := ethereumSym.EthCurrentChainIdSize(uint32(c), &size); err != 0 {
 		return nil, fmt.Errorf("Getting current chain id failed with: %s", err)
@@ -78,6 +78,7 @@ func (c Client) CurrentChainId() (*big.Int, error) {
 	return nil, errors.New("Chain not found")
 }
 
+// Close will close the Ethereum Client
 func (c Client) Close() {
 	ethereumSym.EthCloseClient(uint32(c))
 }

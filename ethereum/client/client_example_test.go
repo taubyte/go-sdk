@@ -70,7 +70,7 @@ func ExampleClient_BlockByNumber() {
 	// Output: success
 }
 
-func ExampleClient_CurrentChainId() {
+func ExampleClient_CurrentChainID() {
 	// Mocking the calls to the vm for usage in tests and playground
 	mockData := ethereumSym.MockData{
 		Client:         4,
@@ -83,7 +83,7 @@ func ExampleClient_CurrentChainId() {
 		return
 	}
 
-	chainId, err := client.CurrentChainId()
+	chainId, err := client.CurrentChainID()
 	if err != nil {
 		return
 	}

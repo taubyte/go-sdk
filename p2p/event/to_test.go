@@ -11,7 +11,7 @@ import (
 func TestTo(t *testing.T) {
 	var e Event
 
-	testTo, err := cid.Parse("QmZjBpQzRw8UovKaMoWJ3qvQrHZvErqQuXNyXNusm4XYK3")
+	testTo, err := cid.Decode("QmZjBpQzRw8UovKaMoWJ3qvQrHZvErqQuXNyXNusm4XYK3")
 	if err != nil {
 		return
 	}
@@ -33,15 +33,6 @@ func TestTo(t *testing.T) {
 	}
 	if string(to.Bytes()) != string(testTo.Bytes()) {
 		t.Errorf("Expected %s, got %s", string(testTo.Bytes()), string(to.Bytes()))
-		return
-	}
-
-	// Size 0
-	symbols.MockData{To: cid.Cid{}}.Mock()
-
-	_, err = e.To()
-	if err != nil {
-		t.Error(err)
 		return
 	}
 

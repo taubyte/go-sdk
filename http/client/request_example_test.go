@@ -10,7 +10,7 @@ import (
 
 func ExampleHttpRequest_Do() {
 	// Mocking the calls to the vm for usage in tests and playground
-	symbols.MockData{ResponseBody: []byte("Hello, world!")}.Mock()
+	symbols.MockData{ResponseBody: []byte("Hello, world!"), ResponseHeaders: map[string][]string{"Content-Type": {"application/json"}}}.Mock()
 
 	httpClient, err := client.New()
 	if err != nil {
@@ -32,12 +32,35 @@ func ExampleHttpRequest_Do() {
 	if err != nil {
 		return
 	}
+	fmt.Println(string(data))
 
 	err = body.Close()
 	if err != nil {
 		return
 	}
 
-	fmt.Println(string(data))
+	headers := response.Headers()
+
+	contentType, err := headers.Get("Content-Type")
+	if err != nil {
+		return
+	}
+	fmt.Println(contentType[0])
+
+	headerKeys, err := headers.List()
+	if err != nil {
+		return
+	}
+	fmt.Println(len(headerKeys))
+
+	headerMap, err := headers.GetAll()
+	if err != nil {
+		return
+	}
+	fmt.Println(len(headerMap))
+
 	// Output: Hello, world!
+	// application/json
+	// 1
+	// 1
 }

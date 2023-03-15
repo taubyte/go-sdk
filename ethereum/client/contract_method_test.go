@@ -7,49 +7,32 @@ import (
 	"testing"
 
 	ethereumSym "github.com/taubyte/go-sdk-symbols/ethereum/client"
+	"gotest.tools/assert"
 )
 
 func TestContractMethod(t *testing.T) {
 	err := setTestVars()
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	client, err := newMockClient()
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	reader, err := os.Open("contract_test.go")
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
-	err = ethereumSym.MockDeployContract(testContract, testAddress, testTransactionId, testContractId, false, false)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	err = ethereumSym.MockDeployContract(testContract, testAddress, testTransactionID, testContractID, false, false)
+	assert.NilError(t, err)
 
 	byteCode := make([]byte, 1024)
 	rand.Read(byteCode)
 	_byteCode := bytes.NewReader(byteCode)
 
 	contract, _, err := client.DeployContract(reader, _byteCode, testChain, testBytes)
-	if err != nil {
-		t.Errorf("Deploying contract failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	for method := range testContract.Methods {
 		contractMethod, err := contract.Method(method)
-		if err != nil {
-			t.Errorf("Getting contract method `%s` failed with: %s", method, err)
-			return
-		}
+		assert.NilError(t, err)
 
 		if contractMethod.Name() != method {
 			t.Errorf("Expected method name `%s` got `%s`", method, contractMethod.Name())
@@ -66,50 +49,29 @@ func TestContractMethod(t *testing.T) {
 
 func TestInputParams(t *testing.T) {
 	err := setTestVars()
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	client, err := newMockClient()
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	reader, err := os.Open("contract_test.go")
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
-	err = ethereumSym.MockDeployContract(testContract, testAddress, testTransactionId, testContractId, false, false)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	err = ethereumSym.MockDeployContract(testContract, testAddress, testTransactionID, testContractID, false, false)
+	assert.NilError(t, err)
 
 	byteCode := make([]byte, 1024)
 	rand.Read(byteCode)
 	_byteCode := bytes.NewReader(byteCode)
 
 	contract, _, err := client.DeployContract(reader, _byteCode, testChain, testBytes)
-	if err != nil {
-		t.Errorf("Deploying contract failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	contractMethod, err := contract.Method(testPassingMethod)
-	if err != nil {
-		t.Errorf("Getting contract method `%s` failed with: %s", testPassingMethod, err)
-		return
-	}
+	assert.NilError(t, err)
 
 	inputBytes, err := contractMethod.handleInputs()
-	if err != nil {
-		t.Errorf("Getting input bytes for 0 inputs failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	if bytes.Compare(inputBytes, []byte{0}) != 0 {
 		t.Error("Unexpected byte array")
@@ -117,10 +79,7 @@ func TestInputParams(t *testing.T) {
 	}
 
 	_, err = contractMethod.handleInputs(testPassingInput)
-	if err != nil {
-		t.Errorf("Getting input bytes contract method failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	_, err = contractMethod.handleInputs(testString)
 	if err == nil {
@@ -129,10 +88,7 @@ func TestInputParams(t *testing.T) {
 	}
 
 	contractMethod, err = contract.Method(testInputFailureMethod)
-	if err != nil {
-		t.Errorf("Getting contract method `%s` failed with: %s", testInputFailureMethod, err)
-		return
-	}
+	assert.NilError(t, err)
 
 	_, err = contractMethod.handleInputs(testIncompatibleVar)
 	if err == nil {
@@ -143,59 +99,38 @@ func TestInputParams(t *testing.T) {
 
 func TestContractTransact(t *testing.T) {
 	err := setTestVars()
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	client, err := newMockClient()
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	reader, err := os.Open("contract_test.go")
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
-	err = ethereumSym.MockDeployContract(testContract, testAddress, testTransactionId, testContractId, false, false)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	err = ethereumSym.MockDeployContract(testContract, testAddress, testTransactionID, testContractID, false, false)
+	assert.NilError(t, err)
 
 	byteCode := make([]byte, 1024)
 	rand.Read(byteCode)
 	_byteCode := bytes.NewReader(byteCode)
 
 	contract, _, err := client.DeployContract(reader, _byteCode, testChain, testBytes)
-	if err != nil {
-		t.Errorf("Deploying contract failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	contractMethod, err := contract.Method(testPassingMethod)
-	if err != nil {
-		t.Errorf("Getting contract method `%s` failed with: %s", testPassingMethod, err)
-		return
-	}
+	assert.NilError(t, err)
 
-	ethereumSym.MockTransactContract(testClientId, testTransactionId)
+	ethereumSym.MockTransactContract(testClientID, testTransactionID)
 
 	tx, err := contractMethod.Transact(testChain, testBytes, testPassingInput)
-	if err != nil {
-		t.Errorf("Calling contract method transaction failed with: %s", err)
+	assert.NilError(t, err)
+
+	if tx.id != testTransactionID {
+		t.Errorf("Expected transaction id `%d` got `%d`", testTransactionID, tx.id)
 		return
 	}
 
-	if tx.id != testTransactionId {
-		t.Errorf("Expected transaction id `%d` got `%d`", testTransactionId, tx.id)
-		return
-	}
-
-	ethereumSym.MockTransactContract(testClientId+10, testTransactionId)
+	ethereumSym.MockTransactContract(testClientID+10, testTransactionID)
 
 	_, err = contractMethod.Transact(testChain, testBytes, testPassingInput)
 	if err == nil {
@@ -224,62 +159,35 @@ func TestContractTransact(t *testing.T) {
 
 func TestCall(t *testing.T) {
 	err := setTestVars()
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	client, err := newMockClient()
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	reader, err := os.Open("contract_test.go")
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
-	err = ethereumSym.MockDeployContract(testContract, testAddress, testTransactionId, testContractId, false, false)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	err = ethereumSym.MockDeployContract(testContract, testAddress, testTransactionID, testContractID, false, false)
+	assert.NilError(t, err)
 
 	byteCode := make([]byte, 1024)
 	rand.Read(byteCode)
 	_byteCode := bytes.NewReader(byteCode)
 
 	contract, _, err := client.DeployContract(reader, _byteCode, testChain, testBytes)
-	if err != nil {
-		t.Errorf("Deploying contract failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	contractMethod, err := contract.Method(testPassingMethod)
-	if err != nil {
-		t.Errorf("Getting contract method `%s` failed with: %s", testPassingMethod, err)
-		return
-	}
+	assert.NilError(t, err)
 
 	ethereumSym.MockCall(testContract, false, false)
-	if err != nil {
-		t.Errorf("Initializing mock call failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	_, err = contractMethod.Call(testPassingInput)
-	if err != nil {
-		t.Errorf("Calling contract method `%s` failed with: %s", contractMethod.Name(), err)
-		return
-	}
+	assert.NilError(t, err)
 
 	contractMethod, err = contract.Method(testInputFailureMethod)
-	if err != nil {
-		t.Errorf("Getting contract method `%s` failed with: %s", testInputFailureMethod, err)
-		return
-	}
+	assert.NilError(t, err)
 
 	_, err = contractMethod.Call(testPassingInput)
 	if err == nil {
@@ -294,10 +202,7 @@ func TestCall(t *testing.T) {
 	}
 
 	contractMethod, err = contract.Method(testOutputFailureMethod)
-	if err != nil {
-		t.Errorf("Getting contract method `%s` failed with: %s", testOutputFailureMethod, err)
-		return
-	}
+	assert.NilError(t, err)
 
 	_, err = contractMethod.Call(testIncompatibleVar)
 	if err == nil {
@@ -314,10 +219,7 @@ func TestCall(t *testing.T) {
 	ethereumSym.MockCall(testContract, true, false)
 
 	contractMethod, err = contract.Method(testPassingMethod)
-	if err != nil {
-		t.Errorf("Getting contract method `%s` failed with: %s", testPassingMethod, err)
-		return
-	}
+	assert.NilError(t, err)
 
 	_, err = contractMethod.Call(testPassingInput)
 	if err == nil {
@@ -326,10 +228,7 @@ func TestCall(t *testing.T) {
 	}
 
 	contractMethod, err = contract.Method(testOutputFailureMethod)
-	if err != nil {
-		t.Errorf("Getting contract method `%s` failed with: %s", testOutputFailureMethod, err)
-		return
-	}
+	assert.NilError(t, err)
 
 	_, err = contractMethod.Call(testPassingInput)
 	if err == nil {
@@ -346,12 +245,9 @@ func TestCall(t *testing.T) {
 	}
 
 	contractMethod, err = contract.Method(testPassingMethod)
-	if err != nil {
-		t.Errorf("Getting contract method `%s` failed with: %s", testOutputFailureMethod, err)
-		return
-	}
+	assert.NilError(t, err)
 
-	testContract.CallDataClientId = testClientId + 10
+	testContract.CallDataClientId = testClientID + 10
 	ethereumSym.MockCall(testContract, false, false)
 
 	_, err = contractMethod.Call(testPassingInput)
@@ -364,10 +260,8 @@ func TestCall(t *testing.T) {
 	ethereumSym.MockCall(testContract, false, false)
 
 	output, err := contractMethod.Call(testPassingInput)
-	if err != nil {
-		t.Errorf("Call failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
+
 	if output != nil {
 		t.Errorf("Expected nil output, got `%v`", output)
 	}

@@ -3,25 +3,17 @@ package ethereum
 import (
 	"testing"
 
-	ethereumSym "github.com/taubyte/go-sdk-symbols/ethereum/client"
-)
-
-var (
-	fakeMessage   = []byte("hello world")
-	fakePrivKey   = []byte("fake_priv_key")
-	fakeSignature = []byte{1, 2, 3}
+	"gotest.tools/assert"
 )
 
 func TestSign(t *testing.T) {
-	ethereumSym.MockSign(fakeMessage)
+	privateKey, err := HexToECDSABytes(testPrivateKeyHex)
+	assert.NilError(t, err)
 
-	_, err := SignMessage(fakeMessage, fakePrivKey)
-	if err != nil {
-		t.Errorf("Signing message failed with: %s", err)
-		return
-	}
+	_, err = SignMessage([]byte("hello world"), privateKey)
+	assert.NilError(t, err)
 
-	_, err = SignMessage([]byte("wrong worlds"), fakePrivKey)
+	_, err = SignMessage([]byte("hello world"), []byte("hello world"))
 	if err == nil {
 		t.Error("Expected error")
 		return
@@ -35,25 +27,28 @@ func TestSign(t *testing.T) {
 }
 
 func TestSignatureVerify(t *testing.T) {
-	ethereumSym.MockVerify(fakeMessage, true)
+	privateKey, err := HexToECDSABytes(testPrivateKeyHex)
+	assert.NilError(t, err)
 
-	err := VerifySignature(fakeMessage, fakePrivKey, []byte{1, 2, 3})
-	if err != nil {
-		t.Errorf("Verifying signature failed with: %s", err)
-		return
-	}
+	publicKey, err := PublicKeyFromPrivate(privateKey)
+	assert.NilError(t, err)
 
-	err = VerifySignature([]byte("helloWorld"), fakePrivKey, fakeSignature)
+	signature, err := SignMessage([]byte("hello world"), privateKey)
+	assert.NilError(t, err)
+
+	err = VerifySignature([]byte("hello world"), publicKey, signature)
+	assert.NilError(t, err)
+
+	err = VerifySignature([]byte("helloworld"), publicKey, []byte{1, 2, 3})
 	if err == nil {
 		t.Error("Expected error")
 		return
 	}
 
-	ethereumSym.MockVerify(fakeMessage, false)
-
-	err = VerifySignature(fakeMessage, fakePrivKey, []byte{1, 2, 3})
+	err = VerifySignature([]byte("helloworld"), publicKey, signature)
 	if err == nil {
 		t.Error("Expected error")
+		return
 	}
 
 	err = VerifySignature(nil, nil, nil)
@@ -64,33 +59,31 @@ func TestSignatureVerify(t *testing.T) {
 }
 
 func TestVerifySignInputs(t *testing.T) {
-	if err := verifySignInputs(nil, fakePrivKey, fakeSignature, false, false); err == nil {
+	if err := verifySignInputs(nil, testBytes, testBytes, false, false); err == nil {
 		t.Error("Expected error")
 		return
 	}
 
-	if err := verifySignInputs(fakeMessage, nil, []byte{1, 2, 3}, false, false); err == nil {
+	if err := verifySignInputs(testBytes, nil, testBytes, false, false); err == nil {
 		t.Error("Expected error")
 		return
 	}
 
-	if err := verifySignInputs(fakeMessage, nil, []byte{1, 2, 3}, true, false); err == nil {
+	if err := verifySignInputs(testBytes, nil, testBytes, true, false); err == nil {
 		t.Error("Expected error")
 		return
 	}
 
-	if err := verifySignInputs(fakeMessage, fakePrivKey, nil, false, true); err == nil {
+	if err := verifySignInputs(testBytes, testBytes, nil, false, true); err == nil {
 		t.Error("Expected error")
 		return
 	}
 
-	if err := verifySignInputs(fakeMessage, fakePrivKey, []byte{}, false, true); err == nil {
+	if err := verifySignInputs(testBytes, testBytes, []byte{}, false, true); err == nil {
 		t.Error("Expected error")
 		return
 	}
 
-	if err := verifySignInputs(fakeMessage, fakePrivKey, nil, false, false); err != nil {
-		t.Errorf("verifySignInputs failed with: %s", err)
-		return
-	}
+	err := verifySignInputs(testBytes, testBytes, nil, false, false)
+	assert.NilError(t, err)
 }

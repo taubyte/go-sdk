@@ -5,8 +5,9 @@ import (
 
 	eventSym "github.com/taubyte/go-sdk-symbols/event"
 	"github.com/taubyte/go-sdk/common"
+	http "github.com/taubyte/go-sdk/http/event"
 	p2p "github.com/taubyte/go-sdk/p2p/event"
-	"github.com/taubyte/go-sdk/pubsub"
+	pubsub "github.com/taubyte/go-sdk/pubsub/event"
 )
 
 func (e Event) Type() common.EventType {
@@ -16,20 +17,20 @@ func (e Event) Type() common.EventType {
 	return common.EventType(et)
 }
 
-func (e Event) HTTP() (HttpEvent, error) {
+func (e Event) HTTP() (http.Event, error) {
 	if e.Type() != common.EventTypeHttp {
 		return 0, errors.New("Not an http event")
 	}
 
-	return HttpEvent(e), nil
+	return http.Event(e), nil
 }
 
-func (e Event) PubSub() (pubsub.PubSubEvent, error) {
+func (e Event) PubSub() (pubsub.Event, error) {
 	if e.Type() != common.EventTypePubsub {
 		return 0, errors.New("Not a pubsub event")
 	}
 
-	return pubsub.PubSubEvent(e), nil
+	return pubsub.Event(e), nil
 }
 
 // Gives a p2pEvent if the current function is called through p2p

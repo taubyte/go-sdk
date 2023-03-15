@@ -12,14 +12,14 @@ import (
 
 func (t *Transaction) callBytesMethod(method string) ([]byte, error) {
 	var size uint32
-	err := ethereumSym.EthGetTransactionMethodSize(uint32(t.client), &t.blockId, t.contractId, t.id, method, &size)
+	err := ethereumSym.EthGetTransactionMethodSize(uint32(t.client), &t.blockID, t.contractID, t.id, method, &size)
 	if err != 0 {
 		return nil, fmt.Errorf("Getting size failed with: %s", err)
 	}
 
 	if size != 0 {
 		buf := make([]byte, size)
-		err = ethereumSym.EthGetTransactionMethodBytes(uint32(t.client), &t.blockId, t.contractId, t.id, method, &buf[0])
+		err = ethereumSym.EthGetTransactionMethodBytes(uint32(t.client), &t.blockID, t.contractID, t.id, method, &buf[0])
 		if err != 0 {
 			return nil, fmt.Errorf("Getting bytes buffer failed with: %s", err)
 		}
@@ -36,7 +36,7 @@ func (t *Transaction) Nonce() (uint64, error) {
 		return t.nonce, nil
 	}
 
-	if err := ethereumSym.EthGetTransactionMethodUint64(uint32(t.client), &t.blockId, t.contractId, t.id, reflection.TransactionNonceMethod.String(), &t.nonce); err != 0 {
+	if err := ethereumSym.EthGetTransactionMethodUint64(uint32(t.client), &t.blockID, t.contractID, t.id, reflection.TransactionNonceMethod.String(), &t.nonce); err != 0 {
 		return 0, fmt.Errorf("Getting transaction nonce failed with: %s", err)
 	}
 	return t.nonce, nil
@@ -93,7 +93,7 @@ func (t *Transaction) Gas() (uint64, error) {
 		return t.gas, nil
 	}
 
-	if err := ethereumSym.EthGetTransactionMethodUint64(uint32(t.client), &t.blockId, t.contractId, t.id, reflection.TransactionGasMethod.String(), &t.gas); err != 0 {
+	if err := ethereumSym.EthGetTransactionMethodUint64(uint32(t.client), &t.blockID, t.contractID, t.id, reflection.TransactionGasMethod.String(), &t.gas); err != 0 {
 		return 0, fmt.Errorf("Getting transaction gas failed with: %s", err)
 	}
 
@@ -130,20 +130,19 @@ func (t *Transaction) Data() ([]byte, error) {
 	return t.data, nil
 }
 
-// RawSignatureValues returns the V, R, S signature values of the transaction.
-// The return values should not be modified by the caller.
+// RawSignatures returns the V, R, S signature values of the transaction. The return values should not be modified by the caller.
 func (t *Transaction) RawSignatures() (rawSignatures, error) {
 	if t.rawSignatures.VSig != nil && t.rawSignatures.SSig != nil && t.rawSignatures.RSig != nil {
 		return t.rawSignatures, nil
 	}
 
 	sizes := make([]uint32, 3)
-	if err := ethereumSym.EthTransactionRawSignaturesSize(uint32(t.client), &t.blockId, t.contractId, t.id, &sizes[0], &sizes[1], &sizes[2]); err != 0 {
+	if err := ethereumSym.EthTransactionRawSignaturesSize(uint32(t.client), &t.blockID, t.contractID, t.id, &sizes[0], &sizes[1], &sizes[2]); err != 0 {
 		return t.rawSignatures, fmt.Errorf("Getting transaction signatures failed with: %s", err)
 	}
 
 	bufList := slices.MakeByteList(sizes...)
-	if err0 := ethereumSym.EthTransactionRawSignatures(uint32(t.client), &t.blockId, t.contractId, t.id, &bufList[0][0], &bufList[1][0], &bufList[2][0]); err0 != 0 {
+	if err0 := ethereumSym.EthTransactionRawSignatures(uint32(t.client), &t.blockID, t.contractID, t.id, &bufList[0][0], &bufList[1][0], &bufList[2][0]); err0 != 0 {
 		return t.rawSignatures, fmt.Errorf("Getting nonce from transaction failed with: %s", err0)
 	}
 
@@ -161,8 +160,8 @@ func (t *Transaction) ToAddress() ([]byte, error) {
 		return t.toAddress, nil
 	}
 
-	buf := make([]byte, addressByteLength)
-	err := ethereumSym.EthGetTransactionMethodBytes(uint32(t.client), &t.blockId, t.contractId, t.id, reflection.TransactionToAddressMethod.String(), &buf[0])
+	buf := make([]byte, AddressByteLength)
+	err := ethereumSym.EthGetTransactionMethodBytes(uint32(t.client), &t.blockID, t.contractID, t.id, reflection.TransactionToAddressMethod.String(), &buf[0])
 	if err != 0 {
 		return nil, fmt.Errorf("Getting transaction recipient address failed with: %s", err)
 	}
@@ -202,9 +201,9 @@ func (t *Transaction) Hash() ([]byte, error) {
 	return t.hash, nil
 }
 
-// SendTransaction injects a signed transaction into the pending pool for execution.
+// Send injects a signed transaction into the pending pool for execution.
 func (t *Transaction) Send() (err error) {
-	if err0 := ethereumSym.EthSendTransaction(uint32(t.client), &t.blockId, t.contractId, t.id); err0 != 0 {
+	if err0 := ethereumSym.EthSendTransaction(uint32(t.client), &t.blockID, t.contractID, t.id); err0 != 0 {
 		err = fmt.Errorf("Sending transaction failed with: %s", err)
 	}
 

@@ -40,7 +40,7 @@ func main() {
 		}
 	}
 
-	toWrite := fmt.Sprintf(`// This file was generated, do not manually edit. 
+	toWrite := fmt.Sprintf(`// This file was generated, do not manually edit.
 package errno
 
 var errorStrings = %s}

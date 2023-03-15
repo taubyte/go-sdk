@@ -13,6 +13,7 @@ type HttpResponse struct {
 }
 
 type HttpResponseBody HttpResponse
+type HttpResponseHeaders HttpResponse
 
 type HttpRequestOption func(HttpRequest) error
 

@@ -5,22 +5,17 @@ import (
 	"testing"
 
 	ethereumSym "github.com/taubyte/go-sdk-symbols/ethereum/client"
+	"gotest.tools/assert"
 )
 
 func TestTransaction(t *testing.T) {
 	err := setTestVars()
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	_, block, err := newMockBlock()
-	if err != nil {
-		t.Errorf("Getting mocked block failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
-	ethereumSym.MockBlockTransaction(testClientId, testTransactionId)
+	ethereumSym.MockBlockTransaction(testClientID, testTransactionID)
 
 	_, err = block.Transaction(nil)
 	if err == nil {
@@ -29,16 +24,13 @@ func TestTransaction(t *testing.T) {
 	}
 
 	tx, err := block.Transaction(testTransactionHash)
-	if err != nil {
-		t.Errorf("Getting transaction failed with: %s", err)
-		return
-	}
-	if tx.id != testTransactionId {
-		t.Errorf("Expected transaction id `%d` got `%d`", testTransactionId, tx.id)
+	assert.NilError(t, err)
+	if tx.id != testTransactionID {
+		t.Errorf("Expected transaction id `%d` got `%d`", testTransactionID, tx.id)
 		return
 	}
 
-	ethereumSym.MockBlockTransaction(testClientId+10, testTransactionId)
+	ethereumSym.MockBlockTransaction(testClientID+10, testTransactionID)
 
 	_, err = block.Transaction(testTransactionHash)
 	if err == nil {
@@ -49,16 +41,10 @@ func TestTransaction(t *testing.T) {
 
 func TestTransactions(t *testing.T) {
 	err := setTestVars()
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
 	_, block, err := newMockBlock()
-	if err != nil {
-		t.Errorf("Getting mocked block failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	tx, err := block.Transactions()
 	if err != nil && tx != nil {
@@ -66,27 +52,18 @@ func TestTransactions(t *testing.T) {
 		return
 	}
 
-	err = ethereumSym.MockBlockTransactions(testClientId, testClientId, testTransactions, false)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	err = ethereumSym.MockBlockTransactions(testClientID, testClientID, testTransactions, false)
+	assert.NilError(t, err)
 
 	txs, err := block.Transactions()
-	if err != nil {
-		t.Errorf("Getting mocked transactions failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 	if len(txs) != len(testTransactions) {
 		t.Errorf("Expected `%d` transactions got `%d`", len(testTransactions), len(txs))
 		return
 	}
 
-	err = ethereumSym.MockBlockTransactions(testClientId, testClientId, []uint32{1}, true)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	err = ethereumSym.MockBlockTransactions(testClientID, testClientID, []uint32{1}, true)
+	assert.NilError(t, err)
 
 	_, err = block.Transactions()
 	if err == nil {
@@ -94,11 +71,8 @@ func TestTransactions(t *testing.T) {
 		return
 	}
 
-	err = ethereumSym.MockBlockTransactions(testClientId, testClientId+10, testTransactions, false)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	err = ethereumSym.MockBlockTransactions(testClientID, testClientID+10, testTransactions, false)
+	assert.NilError(t, err)
 
 	_, err = block.Transactions()
 	if err == nil {
@@ -106,11 +80,8 @@ func TestTransactions(t *testing.T) {
 		return
 	}
 
-	err = ethereumSym.MockBlockTransactions(testClientId+10, testClientId, testTransactions, false)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	err = ethereumSym.MockBlockTransactions(testClientID+10, testClientID, testTransactions, false)
+	assert.NilError(t, err)
 
 	_, err = block.Transactions()
 	if err == nil {
@@ -122,39 +93,24 @@ func TestTransactions(t *testing.T) {
 
 func TestBlockNumber(t *testing.T) {
 	err := setTestVars()
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	assert.NilError(t, err)
 
-	err = ethereumSym.MockBlockNumber(testClientId, testClientId, testBlockNumber)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	err = ethereumSym.MockBlockNumber(testClientID, testClientID, testBlockNumber)
+	assert.NilError(t, err)
 
 	_, block, err := newMockBlock()
-	if err != nil {
-		t.Errorf("Getting mocked block failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	blockNum, err := block.Number()
-	if err != nil {
-		t.Errorf("Getting mocked block number failed with: %s", err)
-		return
-	}
+	assert.NilError(t, err)
 
 	if blockNum.Cmp(testBlockNumber) != 0 {
 		t.Errorf("Expected block number `%d` got `%d`", testBlockNumber, blockNum)
 		return
 	}
 
-	err = ethereumSym.MockBlockNumber(testClientId, testClientId+10, testBlockNumber)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	err = ethereumSym.MockBlockNumber(testClientID, testClientID+10, testBlockNumber)
+	assert.NilError(t, err)
 
 	_, err = block.Number()
 	if err == nil {
@@ -162,11 +118,8 @@ func TestBlockNumber(t *testing.T) {
 		return
 	}
 
-	err = ethereumSym.MockBlockNumber(testClientId, testClientId, big.NewInt(0))
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	err = ethereumSym.MockBlockNumber(testClientID, testClientID, big.NewInt(0))
+	assert.NilError(t, err)
 
 	_, err = block.Number()
 	if err == nil {
@@ -174,11 +127,9 @@ func TestBlockNumber(t *testing.T) {
 		return
 	}
 
-	err = ethereumSym.MockBlockNumber(testClientId+10, testClientId, testBlockNumber)
-	if err != nil {
-		t.Error(err)
-		return
-	}
+	err = ethereumSym.MockBlockNumber(testClientID+10, testClientID, testBlockNumber)
+	assert.NilError(t, err)
+
 	_, err = block.Number()
 	if err == nil {
 		t.Error("Expected error")
