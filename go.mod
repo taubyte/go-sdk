@@ -3,9 +3,7 @@ module github.com/taubyte/go-sdk
 go 1.18
 
 // Direct Taubyte imports
-require github.com/taubyte/go-sdk-symbols v0.2.4
-
-replace github.com/taubyte/go-sdk-symbols => ../go-sdk-symbols
+require github.com/taubyte/go-sdk-symbols v0.2.5
 
 // Direct imports
 require (
