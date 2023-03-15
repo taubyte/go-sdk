@@ -8,11 +8,13 @@ import (
 	"github.com/taubyte/go-sdk/i2mv/memview"
 )
 
-var mvCloser io.Closer
-var err error
-var id uint32
-var n int
-var offset int64
+var (
+	mvCloser io.Closer
+	err      error
+	id       uint32
+	n        int
+	offset   int64
+)
 
 func ExampleNew() {
 	// Mocking the calls to the vm for usage in tests and playground
