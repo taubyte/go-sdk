@@ -36,7 +36,7 @@ func ExampleHttpRequestHeaders_Set() {
 
 	for key, values := range testHeaders {
 		for _, v := range values {
-			if slices.Contains(m.Headers[key], v) == false {
+			if !slices.Contains(m.Headers[key], v) {
 				fmt.Printf("Expected %s to contain %s", strings.Join(testHeaders[key], ", \n"), v)
 				return
 			}
@@ -101,7 +101,7 @@ func ExampleHttpRequestHeaders_Get() {
 		return
 	}
 
-	if slices.Contains(headers, "banana") == false || slices.Contains(headers, "orange") == false {
+	if !slices.Contains(headers, "banana") || !slices.Contains(headers, "orange") {
 		return
 	}
 
@@ -131,7 +131,7 @@ func ExampleHttpRequestHeaders_List() {
 		return
 	}
 
-	if slices.Contains(headerKeys, "fruits") == false || slices.Contains(headerKeys, "Content-Type") == false {
+	if !slices.Contains(headerKeys, "fruits") || !slices.Contains(headerKeys, "Content-Type") {
 		return
 	}
 
@@ -162,11 +162,11 @@ func ExampleHttpRequestHeaders_GetAll() {
 	}
 
 	fruits := headers["fruits"]
-	if slices.Contains(fruits, "banana") == false || slices.Contains(fruits, "orange") == false {
+	if !slices.Contains(fruits, "banana") || !slices.Contains(fruits, "orange") {
 		return
 	}
 
-	if slices.Contains(headers["Content-Type"], "application/json") == false {
+	if !slices.Contains(headers["Content-Type"], "application/json") {
 		return
 	}
 

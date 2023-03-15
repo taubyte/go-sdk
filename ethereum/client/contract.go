@@ -108,7 +108,7 @@ func (c *ContractMethod) Name() string {
 // Method returns the contract method with the corresponding inputted name.
 func (c *Contract) Method(name string) (*ContractMethod, error) {
 	contract, ok := c.methods[name]
-	if ok == false {
+	if !ok {
 		return nil, fmt.Errorf("Contract method `%s` not found", name)
 	}
 

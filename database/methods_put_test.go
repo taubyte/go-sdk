@@ -19,12 +19,12 @@ func TestPutEmpty(t *testing.T) {
 	}
 
 	_, ok := putData["otherKey"]
-	if ok == true {
+	if ok {
 		t.Error("Test logic failed, otherKey should be nil")
 	}
 
 	_, ok = putData[testKey]
-	if ok == false {
+	{
 		t.Errorf("Got value `%s` expected nil", putData[testKey])
 		return
 	}
@@ -42,7 +42,7 @@ func TestPutError(t *testing.T) {
 	}
 
 	_, ok := putData[testKey]
-	if ok == true {
+	if ok {
 		t.Errorf("Got value `%s` expected nil", putData[testKey])
 		return
 	}

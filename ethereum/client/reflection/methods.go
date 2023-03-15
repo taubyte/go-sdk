@@ -15,7 +15,7 @@ func (t transactionMethod) String() string {
 // Returns method detail containing methods defining internal usage handling.
 func ReflectiveTransaction(method string) (MethodDetail, error) {
 	methodDetail, ok := transactionMethodMap[method]
-	if ok == false {
+	if !ok {
 		return nil, fmt.Errorf("Method `%s` is unsupported", method)
 	}
 

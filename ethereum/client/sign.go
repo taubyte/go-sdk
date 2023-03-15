@@ -55,7 +55,7 @@ func verifySignInputs(message, key, signature []byte, keyPrivate, checkSig bool)
 		return fmt.Errorf("%s Key is empty", keyType)
 	}
 
-	if checkSig == true && (len(signature) == 0 || signature == nil) {
+	if checkSig && (len(signature) == 0 || signature == nil) {
 		return fmt.Errorf("signature is nil")
 	}
 

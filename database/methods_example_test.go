@@ -84,7 +84,7 @@ func ExampleDatabase_List() {
 	sort.Strings(expected)
 	sort.Strings(data)
 
-	if reflect.DeepEqual(data, expected) == false {
+	if !reflect.DeepEqual(data, expected) {
 		return
 	}
 

@@ -26,7 +26,7 @@ func main() {
 	var errorStrings = `[]string{
 `
 	for fileScanner.Scan() {
-		if checkVars == true {
+		if checkVars {
 			if fileScanner.Text() == ")" {
 				break
 			}

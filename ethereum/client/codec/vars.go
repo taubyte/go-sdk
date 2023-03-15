@@ -13,7 +13,7 @@ var converterMap = map[converterType]converter{
 	"*big.Int": {
 		Encoder: func(val interface{}) ([]byte, error) {
 			value, ok := val.(*big.Int)
-			if ok == false {
+			if !ok {
 				return nil, fmt.Errorf("Value %s is not a *big.Int", val)
 			}
 
@@ -27,7 +27,7 @@ var converterMap = map[converterType]converter{
 	"uint8": {
 		Encoder: func(val interface{}) ([]byte, error) {
 			value, ok := val.(uint8)
-			if ok == false {
+			if !ok {
 				return nil, fmt.Errorf("Value %s is not a uint8", val)
 			}
 
@@ -43,7 +43,7 @@ var converterMap = map[converterType]converter{
 	"uint16": {
 		Encoder: func(val interface{}) ([]byte, error) {
 			value, ok := val.(uint16)
-			if ok == false {
+			if !ok {
 				return nil, fmt.Errorf("Value %s is not a uint16", val)
 			}
 
@@ -63,7 +63,7 @@ var converterMap = map[converterType]converter{
 	"uint32": {
 		Encoder: func(val interface{}) ([]byte, error) {
 			value, ok := val.(uint32)
-			if ok == false {
+			if !ok {
 				return nil, fmt.Errorf("Value %s is not a uint32", val)
 			}
 
@@ -83,7 +83,7 @@ var converterMap = map[converterType]converter{
 	"uint64": {
 		Encoder: func(val interface{}) ([]byte, error) {
 			value, ok := val.(uint64)
-			if ok == false {
+			if !ok {
 				return nil, fmt.Errorf("Value %s is not a uint64", val)
 			}
 
@@ -103,7 +103,7 @@ var converterMap = map[converterType]converter{
 	"int8": {
 		Encoder: func(val interface{}) ([]byte, error) {
 			value, ok := val.(int8)
-			if ok == false {
+			if !ok {
 				return nil, fmt.Errorf("Value %s is not a int8", val)
 			}
 
@@ -131,7 +131,7 @@ var converterMap = map[converterType]converter{
 	"int16": {
 		Encoder: func(val interface{}) ([]byte, error) {
 			value, ok := val.(int16)
-			if ok == false {
+			if !ok {
 				return nil, fmt.Errorf("Value %s is not a int16", val)
 			}
 
@@ -162,7 +162,7 @@ var converterMap = map[converterType]converter{
 	"int32": {
 		Encoder: func(val interface{}) ([]byte, error) {
 			value, ok := val.(int32)
-			if ok == false {
+			if !ok {
 				return nil, fmt.Errorf("Value %s is not a int32", val)
 			}
 
@@ -193,7 +193,7 @@ var converterMap = map[converterType]converter{
 	"int64": {
 		Encoder: func(val interface{}) ([]byte, error) {
 			value, ok := val.(int64)
-			if ok == false {
+			if !ok {
 				return nil, fmt.Errorf("Value %s is not a int64", val)
 			}
 
@@ -224,7 +224,7 @@ var converterMap = map[converterType]converter{
 	"[]byte": {
 		Encoder: func(val interface{}) ([]byte, error) {
 			value, ok := val.([]byte)
-			if ok == false {
+			if !ok {
 				return nil, fmt.Errorf("Value %s is not a uint32", val)
 			}
 
@@ -237,7 +237,7 @@ var converterMap = map[converterType]converter{
 	"common.Address": {
 		Encoder: func(val interface{}) ([]byte, error) {
 			value, ok := val.([]byte)
-			if ok == false {
+			if !ok {
 				return nil, fmt.Errorf("Value %s is not an address", val)
 			}
 
@@ -250,7 +250,7 @@ var converterMap = map[converterType]converter{
 	"[]uint8": {
 		Encoder: func(val interface{}) ([]byte, error) {
 			value, ok := val.([]uint8)
-			if ok == false {
+			if !ok {
 				return nil, fmt.Errorf("Value %s is not a []uint8", val)
 			}
 
@@ -263,11 +263,11 @@ var converterMap = map[converterType]converter{
 	"bool": {
 		Encoder: func(val interface{}) ([]byte, error) {
 			value, ok := val.(bool)
-			if ok == false {
+			if !ok {
 				return nil, fmt.Errorf("Value %s is not a bool", val)
 			}
 
-			if value == false {
+			if !value {
 				return []byte{0}, nil
 			}
 
@@ -289,7 +289,7 @@ var converterMap = map[converterType]converter{
 	"string": {
 		Encoder: func(val interface{}) ([]byte, error) {
 			value, ok := val.(string)
-			if ok == false {
+			if !ok {
 				return nil, fmt.Errorf("Value %s is not a string", val)
 			}
 
