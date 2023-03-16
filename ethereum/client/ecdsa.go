@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
-	ethereumSym "github.com/taubyte/go-sdk-symbols/ethereum/client"
+	ethereumSym "github.com/taubyte/go-sdk-symbols/ethereum/ecdsa"
 	"golang.org/x/crypto/sha3"
 )
 

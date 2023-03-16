@@ -64,7 +64,7 @@ func TestParseSignature(t *testing.T) {
 
 func TestToEthJsMessage(t *testing.T) {
 	msg := ToEthJsMessage("hello world")
-	if bytes.Compare(msg, []byte("\x19Ethereum Signed Message:\n"+strconv.Itoa(len("hello world"))+"hello world")) != 0 {
+	if !bytes.Equal(msg, []byte("\x19Ethereum Signed Message:\n"+strconv.Itoa(len("hello world"))+"hello world")) {
 		t.Error("bytes are not the same")
 	}
 }
@@ -77,10 +77,9 @@ func TestAddressFromPubKey(t *testing.T) {
 	assert.NilError(t, err)
 
 	address := AddressFromPubKey(publicKey)
-	_ = address.Bytes() // for test coverage
+	_ = address.Bytes()
 
 	if address.String() != strings.ToLower(testAddress) {
 		t.Errorf("expected `%s` got `%s`", testAddress, address.String())
 	}
-
 }

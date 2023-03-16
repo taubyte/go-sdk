@@ -20,14 +20,14 @@ func TestTransactionNonce(t *testing.T) {
 	expectedU16 := rand.Uint64()
 	ethereumSym.MockU64method(testClientID+10, expectedU16)
 
-	nonce, err := tx.Nonce()
+	_, err = tx.Nonce()
 	if err == nil {
 		t.Errorf("expected error")
 		return
 	}
 
 	ethereumSym.MockU64method(testClientID, expectedU16)
-	nonce, err = tx.Nonce()
+	nonce, err := tx.Nonce()
 	assert.NilError(t, err)
 
 	if nonce != expectedU16 {
@@ -84,7 +84,7 @@ func TestBytesMethod(t *testing.T) {
 	data, err = tx.callBytesMethod("")
 	assert.NilError(t, err)
 
-	if bytes.Compare(data, bigInt.Bytes()) != 0 {
+	if !bytes.Equal(data, bigInt.Bytes()) {
 		t.Error("Sent and received data are not the same")
 		return
 	}
@@ -101,7 +101,7 @@ func TestGasPrice(t *testing.T) {
 
 	ethereumSym.MockBytesMethod(testClientID+10, testClientID, testGasPrice.Bytes())
 
-	gasPrice, err := tx.GasPrice()
+	_, err = tx.GasPrice()
 	if err == nil {
 		t.Error("Expected error")
 		return
@@ -109,7 +109,7 @@ func TestGasPrice(t *testing.T) {
 
 	ethereumSym.MockBytesMethod(testClientID, testClientID, testGasPrice.Bytes())
 
-	gasPrice, err = tx.GasPrice()
+	gasPrice, err := tx.GasPrice()
 	assert.NilError(t, err)
 
 	if gasPrice.Cmp(testGasPrice) != 0 {
@@ -138,7 +138,7 @@ func TestGasTipCap(t *testing.T) {
 
 	ethereumSym.MockBytesMethod(testClientID+10, testClientID, testGasTipCap.Bytes())
 
-	gasTipCap, err := tx.GasTipCap()
+	_, err = tx.GasTipCap()
 	if err == nil {
 		t.Error("Expected error")
 		return
@@ -146,7 +146,7 @@ func TestGasTipCap(t *testing.T) {
 
 	ethereumSym.MockBytesMethod(testClientID, testClientID, testGasTipCap.Bytes())
 
-	gasTipCap, err = tx.GasTipCap()
+	gasTipCap, err := tx.GasTipCap()
 	assert.NilError(t, err)
 
 	if gasTipCap.Cmp(testGasTipCap) != 0 {
@@ -174,7 +174,7 @@ func TestGasFeeCap(t *testing.T) {
 
 	ethereumSym.MockBytesMethod(testClientID+10, testClientID, testGasFeeCap.Bytes())
 
-	gasFeeCap, err := tx.GasFeeCap()
+	_, err = tx.GasFeeCap()
 	if err == nil {
 		t.Error("Expected error")
 		return
@@ -182,7 +182,7 @@ func TestGasFeeCap(t *testing.T) {
 
 	ethereumSym.MockBytesMethod(testClientID, testClientID, testGasFeeCap.Bytes())
 
-	gasFeeCap, err = tx.GasFeeCap()
+	gasFeeCap, err := tx.GasFeeCap()
 	assert.NilError(t, err)
 
 	if gasFeeCap.Cmp(testGasFeeCap) != 0 {
@@ -209,7 +209,7 @@ func TestTransactionGas(t *testing.T) {
 
 	ethereumSym.MockU64method(testClientID+10, 5)
 
-	gas, err := tx.Gas()
+	_, err = tx.Gas()
 	if err == nil {
 		t.Errorf("expected error")
 		return
@@ -217,7 +217,7 @@ func TestTransactionGas(t *testing.T) {
 
 	expectedU64 := rand.Uint64()
 	ethereumSym.MockU64method(testClientID, expectedU64)
-	gas, err = tx.Gas()
+	gas, err := tx.Gas()
 	assert.NilError(t, err)
 	if gas != expectedU64 {
 		t.Errorf("Expected gas `%d` got `%d`", expectedU64, gas)
@@ -244,7 +244,7 @@ func TestValue(t *testing.T) {
 
 	ethereumSym.MockBytesMethod(testClientID+10, testClientID, testValue.Bytes())
 
-	value, err := tx.Value()
+	_, err = tx.Value()
 	if err == nil {
 		t.Error("Expected error")
 		return
@@ -252,7 +252,7 @@ func TestValue(t *testing.T) {
 
 	ethereumSym.MockBytesMethod(testClientID, testClientID, testValue.Bytes())
 
-	value, err = tx.Value()
+	value, err := tx.Value()
 	assert.NilError(t, err)
 
 	if value.Cmp(testValue) != 0 {
@@ -282,7 +282,7 @@ func TestData(t *testing.T) {
 
 	ethereumSym.MockBytesMethod(testClientID+10, testClientID, testBytes)
 
-	data, err := tx.Data()
+	_, err = tx.Data()
 	if err == nil {
 		t.Error("Expected error")
 		return
@@ -290,10 +290,10 @@ func TestData(t *testing.T) {
 
 	ethereumSym.MockBytesMethod(testClientID, testClientID, testBytes)
 
-	data, err = tx.Data()
+	data, err := tx.Data()
 	assert.NilError(t, err)
 
-	if bytes.Compare(data, testBytes) != 0 {
+	if !bytes.Equal(data, testBytes) {
 		t.Error("sent data nad received data are not the same")
 		return
 	}
@@ -301,7 +301,7 @@ func TestData(t *testing.T) {
 	data, err = tx.Data()
 	assert.NilError(t, err)
 
-	if bytes.Compare(data, testBytes) != 0 {
+	if !bytes.Equal(data, testBytes) {
 		t.Error("sent data nad received data are not the same")
 		return
 	}
@@ -316,7 +316,7 @@ func TestAddress(t *testing.T) {
 
 	ethereumSym.MockBytesMethod(testClientID+10, testClientID+10, testAddressBytes)
 
-	address, err := tx.ToAddress()
+	_, err = tx.ToAddress()
 	if err == nil {
 		t.Error("Expected error")
 		return
@@ -324,10 +324,10 @@ func TestAddress(t *testing.T) {
 
 	ethereumSym.MockBytesMethod(testClientID, testClientID, testAddressBytes)
 
-	address, err = tx.ToAddress()
+	address, err := tx.ToAddress()
 	assert.NilError(t, err)
 
-	if bytes.Compare(address, testAddressBytes) != 0 {
+	if !bytes.Equal(address, testAddressBytes) {
 		t.Error("sent address and received address are not the same")
 		return
 	}
@@ -335,7 +335,7 @@ func TestAddress(t *testing.T) {
 	address, err = tx.ToAddress()
 	assert.NilError(t, err)
 
-	if bytes.Compare(address, testAddressBytes) != 0 {
+	if !bytes.Equal(address, testAddressBytes) {
 		t.Error("sent address and received address are not the same")
 		return
 	}
@@ -350,7 +350,7 @@ func TestChain(t *testing.T) {
 
 	ethereumSym.MockBytesMethod(testClientID+10, testClientID+10, testChain.Bytes())
 
-	chain, err := tx.Chain()
+	_, err = tx.Chain()
 	if err == nil {
 		t.Error("Expected error")
 		return
@@ -358,7 +358,7 @@ func TestChain(t *testing.T) {
 
 	ethereumSym.MockBytesMethod(testClientID, testClientID, testChain.Bytes())
 
-	chain, err = tx.Chain()
+	chain, err := tx.Chain()
 	assert.NilError(t, err)
 
 	if chain.Cmp(testChain) != 0 {
@@ -388,7 +388,7 @@ func TestHash(t *testing.T) {
 	tx.hash = nil
 
 	ethereumSym.MockBytesMethod(testClientID+10, testClientID+10, testBytes)
-	hash, err := tx.Hash()
+	_, err = tx.Hash()
 	if err == nil {
 		t.Error("Expected error")
 		return
@@ -396,10 +396,10 @@ func TestHash(t *testing.T) {
 
 	ethereumSym.MockBytesMethod(testClientID, testClientID, testBytes)
 
-	hash, err = tx.Hash()
+	hash, err := tx.Hash()
 	assert.NilError(t, err)
 
-	if bytes.Compare(hash, testBytes) != 0 {
+	if !bytes.Equal(hash, testBytes) {
 		t.Error("sent hash and received hash are not the same")
 		return
 	}
@@ -407,7 +407,7 @@ func TestHash(t *testing.T) {
 	hash, err = tx.Hash()
 	assert.NilError(t, err)
 
-	if bytes.Compare(hash, testBytes) != 0 {
+	if !bytes.Equal(hash, testBytes) {
 		t.Error("sent hash and received data are not the same")
 		return
 	}

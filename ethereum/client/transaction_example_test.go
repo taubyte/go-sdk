@@ -414,7 +414,7 @@ func ExampleTransaction_Hash() {
 	}
 
 	hash, err := tx.Hash()
-	if err != nil || bytes.Compare(hash, txHash) != 0 {
+	if err != nil || !bytes.Equal(hash, txHash) {
 		return
 	}
 

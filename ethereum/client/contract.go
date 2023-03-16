@@ -19,27 +19,27 @@ func (c Client) DeployContract(abi, byteCode io.Reader, chainID *big.Int, privat
 		return nil, nil, fmt.Errorf("ABI is nil")
 	}
 	if byteCode == nil {
-		return nil, nil, fmt.Errorf("Byte code is nil")
+		return nil, nil, fmt.Errorf("byte code is nil")
 	}
 	if len(privateKey) == 0 {
-		return nil, nil, fmt.Errorf("Private key is empty")
+		return nil, nil, fmt.Errorf("private key is empty")
 	}
 	if chainID == nil {
 		chainID, err = c.CurrentChainID()
 		if err != nil {
-			return nil, nil, fmt.Errorf("Getting current chain failed with: %s", err)
+			return nil, nil, fmt.Errorf("getting current chain failed with: %s", err)
 		}
 	}
 
 	chainBytes := chainID.Bytes()
 	_byteCode, err := ioutil.ReadAll(byteCode)
 	if err != nil {
-		return nil, nil, fmt.Errorf("Reading byte code failed with: %s", err)
+		return nil, nil, fmt.Errorf("reading byte code failed with: %s", err)
 	}
 
 	abiBytes, err := ioutil.ReadAll(abi)
 	if err != nil {
-		return nil, nil, fmt.Errorf("Reading abi failed with: %s", err)
+		return nil, nil, fmt.Errorf("reading abi failed with: %s", err)
 	}
 
 	var methodSize uint32
@@ -49,14 +49,14 @@ func (c Client) DeployContract(abi, byteCode io.Reader, chainID *big.Int, privat
 
 	err0 := ethereumSym.EthDeployContract(uint32(c), &chainBytes[0], uint32(len(chainBytes)), string(_byteCode), &abiBytes[0], uint32(len(abiBytes)), &privateKey[0], uint32(len(privateKey)), &address[0], &methodSize, &contractID, &transactionID)
 	if err0 != 0 {
-		return nil, nil, fmt.Errorf("Deploying contract failed with: %s", err0)
+		return nil, nil, fmt.Errorf("deploying contract failed with: %s", err0)
 	}
 
 	addressString, _ := bytes.AddressToHex(address)
 
 	contract, err := c.getContract(addressString, contractID, methodSize)
 	if err != nil {
-		return nil, nil, fmt.Errorf("Getting contract failed with: %s", err)
+		return nil, nil, fmt.Errorf("getting contract failed with: %s", err)
 	}
 
 	return contract, &Transaction{id: transactionID, contractID: contractID}, err
@@ -74,7 +74,7 @@ func (c Client) NewBoundContract(abi io.Reader, address string) (*Contract, erro
 
 	abiBytes, err := ioutil.ReadAll(abi)
 	if err != nil {
-		return nil, fmt.Errorf("Reading abi failed with: %s", err)
+		return nil, fmt.Errorf("reading abi failed with: %s", err)
 	}
 
 	var (
@@ -84,7 +84,7 @@ func (c Client) NewBoundContract(abi io.Reader, address string) (*Contract, erro
 
 	err0 := ethereumSym.EthNewContractSize(uint32(c), &abiBytes[0], uint32(len(abiBytes)), address, &methodSize, &contractID)
 	if err0 != 0 {
-		return nil, fmt.Errorf("Creating new bound contract failed with: %s", err0)
+		return nil, fmt.Errorf("creating new bound contract failed with: %s", err0)
 	}
 
 	return c.getContract(address, contractID, methodSize)
@@ -109,7 +109,7 @@ func (c *ContractMethod) Name() string {
 func (c *Contract) Method(name string) (*ContractMethod, error) {
 	contract, ok := c.methods[name]
 	if !ok {
-		return nil, fmt.Errorf("Contract method `%s` not found", name)
+		return nil, fmt.Errorf("contract method `%s` not found", name)
 	}
 
 	return contract, nil
@@ -128,14 +128,14 @@ func (c Client) getContract(address string, contractID, methodSize uint32) (*Con
 		encodedMethods := make([]byte, methodSize)
 		err0 := ethereumSym.EthNewContract(uint32(c), contractID, &encodedMethods[0])
 		if err0 != 0 {
-			return nil, fmt.Errorf("Getting contract methods data failed with: %s", err0)
+			return nil, fmt.Errorf("getting contract methods data failed with: %s", err0)
 		}
 
 		var methodList []string
 
 		err := codec.Convert(encodedMethods).To(&methodList)
 		if err != nil || len(methodList) == 0 {
-			return nil, fmt.Errorf("Converting encoded methods failed with: %s", err)
+			return nil, fmt.Errorf("converting encoded methods failed with: %s", err)
 		}
 
 		for _, method := range methodList {
@@ -162,7 +162,7 @@ func (c Client) methodInputOutput(method string, contractID uint32) (inputs []st
 	var outputSize uint32
 	err0 := ethereumSym.EthGetContractMethodSize(uint32(c), contractID, method, &inputSize, &outputSize)
 	if err0 != 0 {
-		return nil, nil, fmt.Errorf("Getting contract method `%s` inputs and outputs size failed with: %s", method, err0)
+		return nil, nil, fmt.Errorf("getting contract method `%s` inputs and outputs size failed with: %s", method, err0)
 	}
 
 	var inputBuf []byte
@@ -180,20 +180,20 @@ func (c Client) methodInputOutput(method string, contractID uint32) (inputs []st
 
 	err0 = ethereumSym.EthGetContractMethod(uint32(c), contractID, method, &inputBuf[0], &outputBuf[0])
 	if err0 != 0 {
-		return nil, nil, fmt.Errorf("Getting contract method `%s` inputs and outputs failed with: %s", method, err0)
+		return nil, nil, fmt.Errorf("getting contract method `%s` inputs and outputs failed with: %s", method, err0)
 	}
 
 	if inputSize != 0 {
 		err = codec.Convert(inputBuf).To(&inputs)
 		if err != nil || len(inputs) == 0 {
-			return nil, nil, fmt.Errorf("Converting contract method `%s` input list to readable list failed with: %s", method, err)
+			return nil, nil, fmt.Errorf("converting contract method `%s` input list to readable list failed with: %s", method, err)
 		}
 	}
 
 	if outputSize != 0 {
 		err = codec.Convert(outputBuf).To(&outputs)
 		if err != nil || len(outputs) == 0 {
-			return nil, nil, fmt.Errorf("Converting contract method `%s` output list to readable list failed with: %s", method, err)
+			return nil, nil, fmt.Errorf("converting contract method `%s` output list to readable list failed with: %s", method, err)
 		}
 	}
 
