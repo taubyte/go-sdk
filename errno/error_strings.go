@@ -91,9 +91,6 @@ var errorStrings = []string{
 	"ErrorEthereumInvalidPublicKey",
 	"ErrorEthereumInvalidPrivateKey",
 	"ErrorEthereumRecoverPubKeyFailed",
-	"ErrorEthereumSiweEIP191InitMessageFailed",
-	"ErrorEthereumSiweParseMessageFailed",
-	"ErrorEthereumSiweEIP191VerifyFailed",
 	"ErrorSizeMismatch",
 	"ErrorStorageGetMetaFailed",
 	"ErrorAddFileToIpfsFailed",
@@ -123,5 +120,8 @@ var errorStrings = []string{
 	"ErrorFifoNotFound",
 	"ErrorFifoDatatypeInvalid",
 	"ErrorP2PDiscoverFailed",
+	"ErrorEthereumSiweEIP191InitMessageFailed",
+	"ErrorEthereumSiweParseMessageFailed",
+	"ErrorEthereumSiweEIP191VerifyFailed",
 	"ErrorCap",
 }

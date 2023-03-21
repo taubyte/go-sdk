@@ -101,9 +101,6 @@ const (
 	ErrorEthereumInvalidPublicKey
 	ErrorEthereumInvalidPrivateKey
 	ErrorEthereumRecoverPubKeyFailed
-	ErrorEthereumSiweEIP191InitMessageFailed
-	ErrorEthereumSiweParseMessageFailed
-	ErrorEthereumSiweEIP191VerifyFailed
 	ErrorSizeMismatch
 	ErrorStorageGetMetaFailed
 	ErrorAddFileToIpfsFailed
@@ -133,5 +130,8 @@ const (
 	ErrorFifoNotFound
 	ErrorFifoDatatypeInvalid
 	ErrorP2PDiscoverFailed
+	ErrorEthereumSiweEIP191InitMessageFailed
+	ErrorEthereumSiweParseMessageFailed
+	ErrorEthereumSiweEIP191VerifyFailed
 	ErrorCap
 )
