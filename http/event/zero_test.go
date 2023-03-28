@@ -9,13 +9,13 @@ import (
 )
 
 func checkZeroSize(t *testing.T, err error) {
-	if strings.Contains(err.Error(), errno.ErrorZeroSize.String()) == false {
+	if !strings.Contains(err.Error(), errno.ErrorZeroSize.String()) {
 		t.Error("Expected ZeroSize error")
 	}
 }
 
 func checkNotZeroSize(t *testing.T, err error) {
-	if strings.Contains(err.Error(), errno.ErrorZeroSize.String()) == true {
+	if strings.Contains(err.Error(), errno.ErrorZeroSize.String()) {
 		t.Error("Got ZeroSize error expected a normal error")
 	}
 }

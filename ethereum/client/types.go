@@ -36,7 +36,6 @@ type Transaction struct {
 	client        Client
 	blockID       uint64
 	contractID    uint32
-	json          []byte
 	nonce         uint64
 	gasPrice      *big.Int
 	gasTipCap     *big.Int
@@ -54,12 +53,6 @@ type rawSignatures struct {
 	VSig *big.Int
 	RSig *big.Int
 	SSig *big.Int
-}
-
-type abi struct {
-	json    string
-	inputs  []string
-	outputs []string
 }
 
 // Address is the fixed (20) byte array of an address

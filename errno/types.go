@@ -130,5 +130,8 @@ const (
 	ErrorFifoNotFound
 	ErrorFifoDatatypeInvalid
 	ErrorP2PDiscoverFailed
+	ErrorEthereumSiweEIP191InitMessageFailed
+	ErrorEthereumSiweParseMessageFailed
+	ErrorEthereumSiweEIP191VerifyFailed
 	ErrorCap
 )

@@ -29,6 +29,10 @@ func (c byteSliceDecoder) To(i interface{}) error {
 		return errors.New("Needs to be a pointer")
 	case *[][]byte:
 		return c.toByteSliceSlice(i.(*[][]byte))
+	case map[string]string:
+		return errors.New("Needs to be a pointer")
+	case *map[string]string:
+		return c.toMapStringString(i.(*map[string]string))
 	default:
 		return errors.New("Convert: Unknown")
 	}
@@ -44,6 +48,8 @@ func (e errorConvertable) To(i interface{}) error {
 
 func Convert(i interface{}) Convertable {
 	switch i.(type) {
+	case map[string]string:
+		return mapStringStringEncoder(i.(map[string]string))
 	case [][]byte:
 		return byteSliceSliceEncoder(i.([][]byte))
 	case []byte:
