@@ -9,7 +9,7 @@ import (
 
 func InitMessage(domain, uri, address, nonce string, options map[string]string) (string, error) {
 	if len(domain) == 0 || len(uri) == 0 || len(address) == 0 {
-		return "", fmt.Errorf("domain, uri, and address are required")
+		return "", fmt.Errorf("domain `%s`, uri `%s`, and address `%s` are required", domain, uri, address)
 	}
 
 	var encodedOptions []byte
