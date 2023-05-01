@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	ethereumSym "github.com/taubyte/go-sdk-symbols/ethereum/client"
+	"github.com/taubyte/go-sdk/ethereum/client/bytes"
 )
 
 // SignMessage returns an ECDSA signed message
@@ -13,7 +14,7 @@ func SignMessage(message, privKey []byte) ([]byte, error) {
 		return nil, fmt.Errorf("Invalid inputs: %s", err)
 	}
 
-	signature := make([]byte, EcdsaSignatureLength)
+	signature := make([]byte, bytes.EcdsaSignatureLength)
 	err0 := ethereumSym.EthSignMessage(&message[0], uint32(len(message)), &privKey[0], uint32(len(privKey)), &signature[0])
 	if err0 != 0 {
 		return nil, fmt.Errorf("Signing message failed with: %s", err0)

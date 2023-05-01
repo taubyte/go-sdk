@@ -10,7 +10,7 @@ import (
 // AddressToHex returns the string value of an address. Addresses must be a 20 byte array.
 func AddressToHex(value []byte) (string, error) {
 	if len(value) != 20 {
-		return "", fmt.Errorf("Invalid address, addresses are composed of 20 bytes, given value is `%d`", len(value))
+		return "", fmt.Errorf("invalid address, addresses are composed of 20 bytes, given value is `%d`", len(value))
 	}
 
 	return string(checkSumHex(value)), nil
@@ -18,7 +18,7 @@ func AddressToHex(value []byte) (string, error) {
 
 // AddressFromHex will return the [20]byte value of a address hex string
 // Any values exceeding [20]byte will be trimmed.
-func AddressFromHex(s string) ([]byte, error) {
+func AddressFromHex(s string) (*Address, error) {
 	if has0xPrefix(s) {
 		s = s[2:]
 	}
@@ -26,15 +26,16 @@ func AddressFromHex(s string) ([]byte, error) {
 		s = "0" + s
 	}
 
-	return hex2Bytes(s)
+	buf, err := hex.DecodeString(s)
+	if err != nil {
+		return nil, err
+	}
+
+	return BytesToAddress(buf), nil
 }
 
 func has0xPrefix(str string) bool {
 	return len(str) >= 2 && str[0] == '0' && (str[1] == 'x' || str[1] == 'X')
-}
-
-func hex2Bytes(str string) ([]byte, error) {
-	return hex.DecodeString(str)
 }
 
 func hexBytes(value []byte) []byte {
@@ -62,4 +63,44 @@ func checkSumHex(value []byte) []byte {
 		}
 	}
 	return buf[:]
+}
+
+// String returns the 0x prefixed hex string representation of the address.
+func (a *Address) String() string {
+	return "0x" + hex.EncodeToString(a[:])
+}
+
+// Bytes returns the address as []byte representation.
+func (a *Address) Bytes() []byte {
+	return a[:]
+}
+
+func (a *Address) SetBytes(b []byte) {
+	if len(b) > len(a) {
+		b = b[len(b)-AddressByteLength:]
+	}
+	copy(a[AddressByteLength-len(b):], b)
+}
+
+func (h *Hash) SetBytes(b []byte) {
+	if len(b) > len(h) {
+		b = b[len(b)-HashByteLength:]
+	}
+	copy(h[HashByteLength-len(b):], b)
+}
+
+func (h *Hash) Bytes() []byte {
+	return h[:]
+}
+
+func BytesToAddress(val []byte) *Address {
+	var a Address
+	a.SetBytes(val)
+	return &a
+}
+
+func BytesToHash(val []byte) *Hash {
+	var h Hash
+	h.SetBytes(val)
+	return &h
 }

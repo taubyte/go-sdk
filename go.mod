@@ -5,6 +5,8 @@ go 1.18
 // Direct Taubyte imports
 require github.com/taubyte/go-sdk-symbols v0.2.5
 
+replace github.com/taubyte/go-sdk-symbols => ../go-sdk-symbols
+
 // Direct imports
 require (
 	github.com/ipfs/go-cid v0.0.7
@@ -18,7 +20,7 @@ require (
 require (
 	github.com/btcsuite/btcd/btcec/v2 v2.2.0 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.0.1 // indirect
-	github.com/ethereum/go-ethereum v1.10.26 // indirect
+	github.com/ethereum/go-ethereum v1.10.26
 	github.com/google/go-cmp v0.5.8 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.12 // indirect
 	github.com/minio/blake2b-simd v0.0.0-20160723061019-3f5f724cb5b1 // indirect

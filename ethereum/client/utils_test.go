@@ -29,8 +29,9 @@ var (
 
 	testChain = big.NewInt(rand.Int63())
 
-	testRPCURL          = "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
-	testAddressBytes, _ = bytes.AddressFromHex(testAddress)
+	testRPCURL        = "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
+	testAddressRaw, _ = bytes.AddressFromHex(testAddress)
+	testAddressBytes  = testAddressRaw.Bytes()
 
 	testContractID         uint32
 	testContractMethodSize uint32

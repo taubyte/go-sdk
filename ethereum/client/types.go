@@ -61,6 +61,3 @@ type abi struct {
 	inputs  []string
 	outputs []string
 }
-
-// Address is the fixed (20) byte array of an address
-type Address [AddressByteLength]byte

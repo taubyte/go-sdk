@@ -5,6 +5,7 @@ import (
 	"math/big"
 
 	ethereumSym "github.com/taubyte/go-sdk-symbols/ethereum/client"
+	"github.com/taubyte/go-sdk/ethereum/client/bytes"
 	"github.com/taubyte/go-sdk/ethereum/client/reflection"
 	"github.com/taubyte/go-sdk/utils/ints"
 	"github.com/taubyte/go-sdk/utils/slices"
@@ -160,7 +161,7 @@ func (t *Transaction) ToAddress() ([]byte, error) {
 		return t.toAddress, nil
 	}
 
-	buf := make([]byte, AddressByteLength)
+	buf := make([]byte, bytes.AddressByteLength)
 	err := ethereumSym.EthGetTransactionMethodBytes(uint32(t.client), &t.blockID, t.contractID, t.id, reflection.TransactionToAddressMethod.String(), &buf[0])
 	if err != 0 {
 		return nil, fmt.Errorf("Getting transaction recipient address failed with: %s", err)

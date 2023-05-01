@@ -1,4 +1,4 @@
-package ethereum
+package bytes
 
 const (
 	// AddressByteLength is the Standard Address Byte Length
