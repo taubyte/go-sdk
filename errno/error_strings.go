@@ -120,9 +120,7 @@ var errorStrings = []string{
 	"ErrorFifoNotFound",
 	"ErrorFifoDatatypeInvalid",
 	"ErrorP2PDiscoverFailed",
-	"ErrorEthereumParseAddressesFailed",
-	"ErrorEthereumParseTopicsFailed",
-	"ErrorEthereumInvalidFilter",
 	"ErrorEthereumWatchEventFailed",
+	"ErrorEthereumRPCOptionUnmarshalFailed",
 	"ErrorCap",
 }
