@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 
-	geth "github.com/ethereum/go-ethereum/common"
 	eth "github.com/taubyte/go-sdk/ethereum/client/bytes"
 )
 
@@ -44,20 +43,8 @@ func (c byteSliceDecoder) To(i interface{}) error {
 		return pointerError()
 	case *[][]*eth.Hash:
 		return c.toSliceSliceEthHash(val)
-	case []geth.Address:
-		return pointerError()
-	case *[]geth.Address:
-		return c.toSliceGEthAddress(val)
-	case []geth.Hash:
-		return pointerError()
-	case *[]geth.Hash:
-		return c.toSliceGEthHash(val)
-	case [][]geth.Hash:
-		return pointerError()
-	case *[][]geth.Hash:
-		return c.toSliceSliceGEthHash(val)
 	default:
-		return errors.New("Convert: Unknown")
+		return errors.New("convert: Unknown")
 	}
 }
 
@@ -81,12 +68,6 @@ func Convert(i interface{}) Convertable {
 		return int32SliceEncoder(val)
 	case []uint32:
 		return uint32SliceEncoder(val)
-	case []geth.Address:
-		return sliceGEthAddressEncoder(val)
-	case []geth.Hash:
-		return sliceGEthHashEncoder(val)
-	case [][]geth.Hash:
-		return sliceSliceGEthHashEncoder(val)
 	case []*eth.Address:
 		return sliceEthAddressEncoder(val)
 	case []*eth.Hash:

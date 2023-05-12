@@ -8,7 +8,6 @@ import (
 	"reflect"
 	"testing"
 
-	geth "github.com/ethereum/go-ethereum/common"
 	eth "github.com/taubyte/go-sdk/ethereum/client/bytes"
 	codec "github.com/taubyte/go-sdk/utils/codec"
 	"gotest.tools/v3/assert"
@@ -192,93 +191,6 @@ func TestEncodingSliceEthAddress(t *testing.T) {
 	assert.NilError(t, err)
 
 	if !reflect.DeepEqual(addresses, newAddresses) {
-		t.Error(err)
-		return
-	}
-}
-
-func TestEncodingSliceGEthAddress(t *testing.T) {
-	addressBuffer1 := make([]byte, eth.AddressByteLength)
-	addressBuffer2 := make([]byte, eth.AddressByteLength)
-
-	_, err := rand.Read(addressBuffer1)
-	assert.NilError(t, err)
-
-	_, err = rand.Read(addressBuffer2)
-	assert.NilError(t, err)
-
-	addresses := []*eth.Address{eth.BytesToAddress(addressBuffer1), eth.BytesToAddress(addressBuffer2)}
-	var encoded []byte
-	err = codec.Convert(addresses).To(&encoded)
-	assert.NilError(t, err)
-
-	var newAddresses []*eth.Address
-	err = codec.Convert(encoded).To(&newAddresses)
-	assert.NilError(t, err)
-
-	if !reflect.DeepEqual(addresses, newAddresses) {
-		t.Error(err)
-		return
-	}
-}
-
-func TestEncodingSliceGEthHash(t *testing.T) {
-	hashBuffer1 := make([]byte, geth.HashLength)
-	hashBuffer2 := make([]byte, geth.HashLength)
-
-	_, err := rand.Read(hashBuffer1)
-	assert.NilError(t, err)
-
-	_, err = rand.Read(hashBuffer2)
-	assert.NilError(t, err)
-
-	hashes := []geth.Hash{geth.BytesToHash(hashBuffer1), geth.BytesToHash(hashBuffer2)}
-	var encoded []byte
-	err = codec.Convert(hashes).To(&encoded)
-	assert.NilError(t, err)
-
-	var newHashes []geth.Hash
-	err = codec.Convert(encoded).To(&newHashes)
-	assert.NilError(t, err)
-
-	if !reflect.DeepEqual(hashes, newHashes) {
-		t.Error(err)
-		return
-	}
-}
-
-func TestEncodingSliceSliceGEthHash(t *testing.T) {
-	hashBuffer1 := make([]byte, geth.HashLength)
-	hashBuffer2 := make([]byte, geth.HashLength)
-	hashBuffer3 := make([]byte, geth.HashLength)
-	hashBuffer4 := make([]byte, geth.HashLength)
-
-	_, err := rand.Read(hashBuffer1)
-	assert.NilError(t, err)
-
-	_, err = rand.Read(hashBuffer2)
-	assert.NilError(t, err)
-
-	_, err = rand.Read(hashBuffer3)
-	assert.NilError(t, err)
-
-	_, err = rand.Read(hashBuffer4)
-	assert.NilError(t, err)
-
-	hashes := [][]geth.Hash{
-		{geth.BytesToHash(hashBuffer1), geth.BytesToHash(hashBuffer2)},
-		{geth.BytesToHash(hashBuffer3), geth.BytesToHash(hashBuffer4)},
-	}
-
-	var encoded []byte
-	err = codec.Convert(hashes).To(&encoded)
-	assert.NilError(t, err)
-
-	var newHashes [][]geth.Hash
-	err = codec.Convert(encoded).To(&newHashes)
-	assert.NilError(t, err)
-
-	if !reflect.DeepEqual(hashes, newHashes) {
 		t.Error(err)
 		return
 	}

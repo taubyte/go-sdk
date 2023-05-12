@@ -15,14 +15,14 @@ func (t *Transaction) callBytesMethod(method string) ([]byte, error) {
 	var size uint32
 	err := ethereumSym.EthGetTransactionMethodSize(uint32(t.client), &t.blockID, t.contractID, t.id, method, &size)
 	if err != 0 {
-		return nil, fmt.Errorf("Getting size failed with: %s", err)
+		return nil, fmt.Errorf("getting size failed with: %s", err)
 	}
 
 	if size != 0 {
 		buf := make([]byte, size)
 		err = ethereumSym.EthGetTransactionMethodBytes(uint32(t.client), &t.blockID, t.contractID, t.id, method, &buf[0])
 		if err != 0 {
-			return nil, fmt.Errorf("Getting bytes buffer failed with: %s", err)
+			return nil, fmt.Errorf("getting bytes buffer failed with: %s", err)
 		}
 
 		return buf, nil
@@ -38,7 +38,7 @@ func (t *Transaction) Nonce() (uint64, error) {
 	}
 
 	if err := ethereumSym.EthGetTransactionMethodUint64(uint32(t.client), &t.blockID, t.contractID, t.id, reflection.TransactionNonceMethod.String(), &t.nonce); err != 0 {
-		return 0, fmt.Errorf("Getting transaction nonce failed with: %s", err)
+		return 0, fmt.Errorf("getting transaction nonce failed with: %s", err)
 	}
 	return t.nonce, nil
 }
@@ -51,7 +51,7 @@ func (t *Transaction) GasPrice() (*big.Int, error) {
 
 	buf, err := t.callBytesMethod(reflection.TransactionGasPriceMethod.String())
 	if err != nil {
-		return nil, fmt.Errorf("Getting gas price failed with: %s", err)
+		return nil, fmt.Errorf("getting gas price failed with: %s", err)
 	}
 
 	t.gasPrice = ints.NewBigInt(buf)
@@ -66,7 +66,7 @@ func (t *Transaction) GasTipCap() (*big.Int, error) {
 
 	buf, err := t.callBytesMethod(reflection.TransactionGasTipCapMethod.String())
 	if err != nil {
-		return nil, fmt.Errorf("Getting gas tip cap failed with: %s", err)
+		return nil, fmt.Errorf("getting gas tip cap failed with: %s", err)
 	}
 
 	t.gasTipCap = ints.NewBigInt(buf)
@@ -81,7 +81,7 @@ func (t *Transaction) GasFeeCap() (*big.Int, error) {
 
 	buf, err := t.callBytesMethod(reflection.TransactionGasFeeCapMethod.String())
 	if err != nil {
-		return nil, fmt.Errorf("Getting gas fee cap failed with: %s", err)
+		return nil, fmt.Errorf("getting gas fee cap failed with: %s", err)
 	}
 
 	t.gasFeeCap = ints.NewBigInt(buf)
@@ -95,7 +95,7 @@ func (t *Transaction) Gas() (uint64, error) {
 	}
 
 	if err := ethereumSym.EthGetTransactionMethodUint64(uint32(t.client), &t.blockID, t.contractID, t.id, reflection.TransactionGasMethod.String(), &t.gas); err != 0 {
-		return 0, fmt.Errorf("Getting transaction gas failed with: %s", err)
+		return 0, fmt.Errorf("getting transaction gas failed with: %s", err)
 	}
 
 	return t.gas, nil
@@ -109,7 +109,7 @@ func (t *Transaction) Value() (*big.Int, error) {
 
 	buf, err := t.callBytesMethod(reflection.TransactionValueMethod.String())
 	if err != nil {
-		return nil, fmt.Errorf("Getting transaction value price failed with: %s", err)
+		return nil, fmt.Errorf("getting transaction value price failed with: %s", err)
 	}
 
 	t.value = ints.NewBigInt(buf)
@@ -124,7 +124,7 @@ func (t *Transaction) Data() ([]byte, error) {
 
 	buf, err := t.callBytesMethod(reflection.TransactionDataMethod.String())
 	if err != nil {
-		return nil, fmt.Errorf("Getting gas price failed with: %s", err)
+		return nil, fmt.Errorf("getting gas price failed with: %s", err)
 	}
 
 	t.data = buf
@@ -139,12 +139,12 @@ func (t *Transaction) RawSignatures() (rawSignatures, error) {
 
 	sizes := make([]uint32, 3)
 	if err := ethereumSym.EthTransactionRawSignaturesSize(uint32(t.client), &t.blockID, t.contractID, t.id, &sizes[0], &sizes[1], &sizes[2]); err != 0 {
-		return t.rawSignatures, fmt.Errorf("Getting transaction signatures failed with: %s", err)
+		return t.rawSignatures, fmt.Errorf("getting transaction signatures failed with: %s", err)
 	}
 
 	bufList := slices.MakeByteList(sizes...)
 	if err0 := ethereumSym.EthTransactionRawSignatures(uint32(t.client), &t.blockID, t.contractID, t.id, &bufList[0][0], &bufList[1][0], &bufList[2][0]); err0 != 0 {
-		return t.rawSignatures, fmt.Errorf("Getting nonce from transaction failed with: %s", err0)
+		return t.rawSignatures, fmt.Errorf("getting nonce from transaction failed with: %s", err0)
 	}
 
 	t.rawSignatures = rawSignatures{
@@ -164,7 +164,7 @@ func (t *Transaction) ToAddress() ([]byte, error) {
 	buf := make([]byte, bytes.AddressByteLength)
 	err := ethereumSym.EthGetTransactionMethodBytes(uint32(t.client), &t.blockID, t.contractID, t.id, reflection.TransactionToAddressMethod.String(), &buf[0])
 	if err != 0 {
-		return nil, fmt.Errorf("Getting transaction recipient address failed with: %s", err)
+		return nil, fmt.Errorf("getting transaction recipient address failed with: %s", err)
 	}
 
 	t.toAddress = buf
@@ -181,7 +181,7 @@ func (t *Transaction) Chain() (*big.Int, error) {
 
 	buf, err := t.callBytesMethod(reflection.TransactionChainMethod.String())
 	if err != nil {
-		return nil, fmt.Errorf("Getting transaction chain Id failed with: %s", err)
+		return nil, fmt.Errorf("getting transaction chain Id failed with: %s", err)
 	}
 
 	t.chain = ints.NewBigInt(buf)
@@ -195,7 +195,7 @@ func (t *Transaction) Hash() ([]byte, error) {
 	}
 	buf, err := t.callBytesMethod(reflection.TransactionHashMethod.String())
 	if err != nil {
-		return nil, fmt.Errorf("Getting transaction value price failed with: %s", err)
+		return nil, fmt.Errorf("getting transaction value price failed with: %s", err)
 	}
 
 	t.hash = buf
@@ -205,7 +205,7 @@ func (t *Transaction) Hash() ([]byte, error) {
 // Send injects a signed transaction into the pending pool for execution.
 func (t *Transaction) Send() (err error) {
 	if err0 := ethereumSym.EthSendTransaction(uint32(t.client), &t.blockID, t.contractID, t.id); err0 != 0 {
-		err = fmt.Errorf("Sending transaction failed with: %s", err)
+		err = fmt.Errorf("sending transaction failed with: %s", err)
 	}
 
 	return

@@ -130,5 +130,7 @@ const (
 	ErrorFifoNotFound
 	ErrorFifoDatatypeInvalid
 	ErrorP2PDiscoverFailed
+	ErrorEthereumWatchEventFailed
+	ErrorEthereumRPCOptionUnmarshalFailed
 	ErrorCap
 )

@@ -2,18 +2,15 @@ package ethereum
 
 import (
 	"fmt"
+	"time"
 
 	ethereumSym "github.com/taubyte/go-sdk-symbols/ethereum/client"
-	qf "github.com/taubyte/go-sdk/ethereum/client/queryFilter"
 )
 
-func (c Client) Subscribe(channelName string, filter *qf.QueryFilter) error {
-	if err := filter.Parse(); err != nil {
-		return err
-	}
-
-	if err0 := ethereumSym.EthSubscribeEvent(filter.SymReturn(uint32(c), channelName)); err0 != 0 {
-		return fmt.Errorf("subscribing to event filter failed with: %s", err0)
+func (c Contract) Subscribe(event, channel string, ttl time.Duration) error {
+	ttlParsed := uint32(ttl.Seconds())
+	if err0 := ethereumSym.EthSubscribeContractEvent(uint32(c.client), c.id, event, channel, ttlParsed); err0 != 0 {
+		return fmt.Errorf("subscribing to contract event `%s` failed with: %s", event, err0)
 	}
 
 	return nil
