@@ -18,10 +18,18 @@ type Contract struct {
 	id      uint32
 	client  Client
 	methods map[string]*ContractMethod
+	events  map[string]Event
 	address string
 }
 
-// ContractMethod defines the contract method and wraps the methods for the method.
+// Event defines the Ethereum event and wraps the methods for the event.
+type Event struct {
+	name       string
+	contractID uint32
+	client     Client
+}
+
+// ContractMethod defines the contract method and wraps the methods for the contract method.
 type ContractMethod struct {
 	contractID uint32
 	client     Client

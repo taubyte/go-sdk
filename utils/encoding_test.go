@@ -2,7 +2,6 @@ package utils
 
 import (
 	"bytes"
-	"fmt"
 	"math/big"
 	"math/rand"
 	"reflect"
@@ -93,16 +92,16 @@ func TestEncodingByteSliceSlice(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	fmt.Println(encoded)
+
 	var new_fruits [][]byte
 	err = codec.Convert(encoded).To(&new_fruits)
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	fmt.Println(new_fruits)
+
 	for idx, fruit := range fruits {
-		if bytes.Compare(fruit, new_fruits[idx]) != 0 {
+		if !bytes.Equal(fruit, new_fruits[idx]) {
 			t.Errorf("`%v` != `%v`", new_fruits[idx], fruit)
 			return
 		}
@@ -194,4 +193,38 @@ func TestEncodingSliceEthAddress(t *testing.T) {
 		t.Error(err)
 		return
 	}
+}
+
+func TestEncodingMapStringUint64(t *testing.T) {
+	testMap := map[string]uint64{
+		"name": 420,
+		"test": 390,
+	}
+
+	var encoded []byte
+	err := codec.Convert(testMap).To(&encoded)
+	assert.NilError(t, err)
+
+	var newMap map[string]uint64
+	err = codec.Convert(encoded).To(&newMap)
+	assert.NilError(t, err)
+
+	assert.DeepEqual(t, testMap, newMap)
+}
+
+func TestEncodingMapStringBool(t *testing.T) {
+	testMap := map[string]bool{
+		"name": false,
+		"test": true,
+	}
+
+	var encoded []byte
+	err := codec.Convert(testMap).To(&encoded)
+	assert.NilError(t, err)
+
+	var newMap map[string]bool
+	err = codec.Convert(encoded).To(&newMap)
+	assert.NilError(t, err)
+
+	assert.DeepEqual(t, testMap, newMap)
 }

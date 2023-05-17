@@ -24,12 +24,11 @@ func (ds byteSliceDecoder) toInt32Slice(result *[]int32) error {
 type int32SliceEncoder []int32
 
 func (c int32SliceEncoder) To(i interface{}) error {
-	switch i.(type) {
+	switch out := i.(type) {
 	case []byte:
-		return errors.New("Needs to be a pointer")
+		return pointerError()
 	case *[]byte:
 		var buf bytes.Buffer
-		out := i.(*[]byte)
 		if *out == nil {
 			*out = make([]byte, 0)
 		}
@@ -38,7 +37,7 @@ func (c int32SliceEncoder) To(i interface{}) error {
 		}
 		*out = buf.Bytes()
 	default:
-		return errors.New("Failed to Encode:Unknown type")
+		return errors.New("failed to Encode:Unknown type")
 	}
 	return nil
 }
@@ -61,12 +60,11 @@ func (ds byteSliceDecoder) toUInt32Slice(result *[]uint32) error {
 type uint32SliceEncoder []uint32
 
 func (c uint32SliceEncoder) To(i interface{}) error {
-	switch i.(type) {
+	switch out := i.(type) {
 	case []byte:
-		return errors.New("Needs to be a pointer")
+		return pointerError()
 	case *[]byte:
 		var buf bytes.Buffer
-		out := i.(*[]byte)
 		if *out == nil {
 			*out = make([]byte, 0)
 		}
@@ -75,7 +73,7 @@ func (c uint32SliceEncoder) To(i interface{}) error {
 		}
 		*out = buf.Bytes()
 	default:
-		return errors.New("Failed to Encode:Unknown type")
+		return errors.New("failed to Encode:Unknown type")
 	}
 	return nil
 }

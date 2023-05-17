@@ -35,6 +35,7 @@ var (
 
 	testContractID         uint32
 	testContractMethodSize uint32
+	testContractEventsSize uint32
 
 	testInputFailureMethod  = "inputFailureMethod"
 	testOutputFailureMethod = "outputFailureMethod"

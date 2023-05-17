@@ -82,7 +82,7 @@ func (c *ContractMethod) Transact(chainID *big.Int, privateKey []byte, inputPara
 		return nil, fmt.Errorf("handling inputs failed with: %s", err)
 	}
 
-	err0 := ethereumSym.EthTransactContract(uint32(c.client), c.contractID, &chainBytes[0], uint32(len(chainBytes)), c.name, &privateKey[0], uint32(len(privateKey)), &encoded[0], uint32(len(encoded)), &transactionID)
+	err0 := ethereumSym.EthTransactContract(uint32(c.client), c.contractID, &chainBytes[0], uint32(len(chainBytes)), c.name, &privateKey[0], uint32(len(privateKey)), &encoded[0], uint32(len(encoded)), 0, &transactionID)
 	if err0 != 0 {
 		return nil, fmt.Errorf("transacting contract method `%s` failed with: %s", c.name, err0)
 	}

@@ -43,6 +43,14 @@ func (c byteSliceDecoder) To(i interface{}) error {
 		return pointerError()
 	case *[][]*eth.Hash:
 		return c.toSliceSliceEthHash(val)
+	case map[string]uint64:
+		return pointerError()
+	case *map[string]uint64:
+		return c.toMapStringUInt64(val)
+	case map[string]bool:
+		return pointerError()
+	case *map[string]bool:
+		return c.toMapStringBool(val)
 	default:
 		return errors.New("convert: Unknown")
 	}
@@ -74,6 +82,10 @@ func Convert(i interface{}) Convertable {
 		return sliceEthHashEncoder(val)
 	case [][]*eth.Hash:
 		return sliceSliceEthHashEncoder(val)
+	case map[string]uint64:
+		return mapStringUint64Encoder(val)
+	case map[string]bool:
+		return mapStringBoolEncoder(val)
 	default:
 		return errorConvertable{err: fmt.Errorf("Convert: incompatible type %#v", i)}
 	}

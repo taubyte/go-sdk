@@ -38,7 +38,7 @@ type cidWriter struct {
 
 func CidWriter(cid cid.Cid) (*cidWriter, error) {
 	bytes := cid.Bytes()
-	if bytes == nil || len(bytes) == 0 {
+	if len(bytes) == 0 {
 		return nil, errors.New("invalid cid")
 	}
 

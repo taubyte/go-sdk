@@ -42,19 +42,20 @@ func (c Client) DeployContract(abi, byteCode io.Reader, chainID *big.Int, privat
 		return nil, nil, fmt.Errorf("reading abi failed with: %s", err)
 	}
 
-	var methodSize uint32
+	var methodsSize uint32
+	var eventsSize uint32
 	address := make([]byte, 20)
 	var contractID uint32
 	var transactionID uint32
 
-	err0 := ethereumSym.EthDeployContract(uint32(c), &chainBytes[0], uint32(len(chainBytes)), string(_byteCode), &abiBytes[0], uint32(len(abiBytes)), &privateKey[0], uint32(len(privateKey)), &address[0], &methodSize, &contractID, &transactionID)
+	err0 := ethereumSym.EthDeployContract(uint32(c), &chainBytes[0], uint32(len(chainBytes)), string(_byteCode), &abiBytes[0], uint32(len(abiBytes)), &privateKey[0], uint32(len(privateKey)), &address[0], &methodsSize, &eventsSize, &contractID, &transactionID)
 	if err0 != 0 {
 		return nil, nil, fmt.Errorf("deploying contract failed with: %s", err0)
 	}
 
 	addressString, _ := bytes.AddressToHex(address)
 
-	contract, err := c.getContract(addressString, contractID, methodSize)
+	contract, err := c.getContract(addressString, contractID, methodsSize, eventsSize)
 	if err != nil {
 		return nil, nil, fmt.Errorf("getting contract failed with: %s", err)
 	}
@@ -77,17 +78,14 @@ func (c Client) NewBoundContract(abi io.Reader, address string) (*Contract, erro
 		return nil, fmt.Errorf("reading abi failed with: %s", err)
 	}
 
-	var (
-		contractID uint32
-		methodSize uint32
-	)
+	var contractID, methodsSize, eventsSize uint32
 
-	err0 := ethereumSym.EthNewContractSize(uint32(c), &abiBytes[0], uint32(len(abiBytes)), address, &methodSize, &contractID)
+	err0 := ethereumSym.EthNewContractSize(uint32(c), &abiBytes[0], uint32(len(abiBytes)), address, &methodsSize, &eventsSize, &contractID)
 	if err0 != 0 {
 		return nil, fmt.Errorf("creating new bound contract failed with: %s", err0)
 	}
 
-	return c.getContract(address, contractID, methodSize)
+	return c.getContract(address, contractID, methodsSize, eventsSize)
 }
 
 // Methods lists the available methods for within the given contract
@@ -122,20 +120,34 @@ func (c *Contract) Address() string {
 
 // getContract method is a helper method for NewBoundContract, and DeployContract methods.
 // Gets the contract methods, their input, and output types for the given contract.
-func (c Client) getContract(address string, contractID, methodSize uint32) (*Contract, error) {
-	methods := make(map[string]*ContractMethod, 0)
+func (c Client) getContract(address string, contractID, methodSize, eventSize uint32) (*Contract, error) {
+	methods := make(map[string]*ContractMethod)
+	events := make(map[string]Event)
 	if methodSize != 0 {
+		if methodSize == 0 {
+			methodSize = 1
+		}
+		if eventSize == 0 {
+			eventSize = 1
+		}
+
 		encodedMethods := make([]byte, methodSize)
-		err0 := ethereumSym.EthNewContract(uint32(c), contractID, &encodedMethods[0])
+		encodedEvents := make([]byte, eventSize)
+
+		err0 := ethereumSym.EthNewContract(uint32(c), contractID, &encodedMethods[0], &encodedEvents[0])
 		if err0 != 0 {
 			return nil, fmt.Errorf("getting contract methods data failed with: %s", err0)
 		}
 
 		var methodList []string
+		var eventsList []string
 
-		err := codec.Convert(encodedMethods).To(&methodList)
-		if err != nil || len(methodList) == 0 {
+		if err := codec.Convert(encodedMethods).To(&methodList); err != nil {
 			return nil, fmt.Errorf("converting encoded methods failed with: %s", err)
+		}
+
+		if err := codec.Convert(encodedEvents).To(&eventsList); err != nil {
+			return nil, fmt.Errorf("converting encoded events failed with: %s", err)
 		}
 
 		for _, method := range methodList {
@@ -152,9 +164,17 @@ func (c Client) getContract(address string, contractID, methodSize uint32) (*Con
 				outputs:    outputs,
 			}
 		}
+
+		for _, event := range eventsList {
+			events[event] = Event{
+				client:     c,
+				contractID: contractID,
+				name:       event,
+			}
+		}
 	}
 
-	return &Contract{id: contractID, client: c, methods: methods, address: address}, nil
+	return &Contract{id: contractID, client: c, methods: methods, events: events, address: address}, nil
 }
 
 func (c Client) methodInputOutput(method string, contractID uint32) (inputs []string, outputs []string, err error) {
@@ -198,4 +218,13 @@ func (c Client) methodInputOutput(method string, contractID uint32) (inputs []st
 	}
 
 	return
+}
+
+func (c *Contract) Event(name string) (*Event, error) {
+	event, ok := c.events[name]
+	if !ok {
+		return nil, fmt.Errorf("event `%s` does not exist in contract", name)
+	}
+
+	return &event, nil
 }
