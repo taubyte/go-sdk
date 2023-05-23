@@ -34,4 +34,4 @@ require (
 	golang.org/x/sys v0.1.0 // indirect
 )
 
-require github.com/taubyte/go-sdk-symbols v0.2.6-0.20230517204829-d608c099d97a
+require github.com/taubyte/go-sdk-symbols v0.2.6-0.20230523154437-1d6520f9114c
