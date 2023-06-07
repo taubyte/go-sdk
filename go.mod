@@ -3,6 +3,7 @@ module github.com/taubyte/go-sdk
 go 1.18
 
 // Direct Taubyte imports
+require github.com/taubyte/go-sdk-symbols v0.2.6
 
 // Direct imports
 require (
@@ -11,6 +12,7 @@ require (
 	golang.org/x/exp v0.0.0-20221026153819-32f3d567a233
 	gotest.tools v2.2.0+incompatible
 	gotest.tools/v3 v3.4.0
+
 )
 
 // Indirect imports
@@ -33,5 +35,3 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	golang.org/x/sys v0.1.0 // indirect
 )
-
-require github.com/taubyte/go-sdk-symbols v0.2.6-0.20230523154437-1d6520f9114c
