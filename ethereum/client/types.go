@@ -18,10 +18,18 @@ type Contract struct {
 	id      uint32
 	client  Client
 	methods map[string]*ContractMethod
+	events  map[string]Event
 	address string
 }
 
-// ContractMethod defines the contract method and wraps the methods for the method.
+// Event defines the Ethereum event and wraps the methods for the event.
+type Event struct {
+	name       string
+	contractID uint32
+	client     Client
+}
+
+// ContractMethod defines the contract method and wraps the methods for the contract method.
 type ContractMethod struct {
 	contractID uint32
 	client     Client
@@ -36,7 +44,6 @@ type Transaction struct {
 	client        Client
 	blockID       uint64
 	contractID    uint32
-	json          []byte
 	nonce         uint64
 	gasPrice      *big.Int
 	gasTipCap     *big.Int
@@ -55,12 +62,3 @@ type rawSignatures struct {
 	RSig *big.Int
 	SSig *big.Int
 }
-
-type abi struct {
-	json    string
-	inputs  []string
-	outputs []string
-}
-
-// Address is the fixed (20) byte array of an address
-type Address [AddressByteLength]byte

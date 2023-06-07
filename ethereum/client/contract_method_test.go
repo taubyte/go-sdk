@@ -73,7 +73,7 @@ func TestInputParams(t *testing.T) {
 	inputBytes, err := contractMethod.handleInputs()
 	assert.NilError(t, err)
 
-	if bytes.Compare(inputBytes, []byte{0}) != 0 {
+	if !bytes.Equal(inputBytes, []byte{0}) {
 		t.Error("Unexpected byte array")
 		return
 	}

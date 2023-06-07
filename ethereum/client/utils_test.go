@@ -8,6 +8,7 @@ import (
 
 	ethereumSym "github.com/taubyte/go-sdk-symbols/ethereum/client"
 	"github.com/taubyte/go-sdk/ethereum/client/bytes"
+	"github.com/taubyte/go-sdk/ethereum/client/rpc"
 	"github.com/taubyte/go-sdk/utils/codec"
 )
 
@@ -29,11 +30,13 @@ var (
 
 	testChain = big.NewInt(rand.Int63())
 
-	testRPCURL          = "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
-	testAddressBytes, _ = bytes.AddressFromHex(testAddress)
+	testRPCURL        = "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
+	testAddressRaw, _ = bytes.AddressFromHex(testAddress)
+	testAddressBytes  = testAddressRaw.Bytes()
 
 	testContractID         uint32
 	testContractMethodSize uint32
+	testContractEventsSize uint32
 
 	testInputFailureMethod  = "inputFailureMethod"
 	testOutputFailureMethod = "outputFailureMethod"
@@ -42,6 +45,8 @@ var (
 	testPassingMethod = "passingMethod"
 	testPassingInput  uint32
 	testPassingOutput uint32
+
+	testEvent = "event"
 
 	testContract ethereumSym.MockContract
 
@@ -84,6 +89,9 @@ func setTestVars() error {
 				Inputs:  []interface{}{testPassingInput},
 				Outputs: []interface{}{testIncompatibleVar},
 			},
+		},
+		Events: map[string]struct{}{
+			testEvent: {},
 		},
 
 		ContractSizeClientId: testClientID,
@@ -130,7 +138,7 @@ func newMockTransaction() (*Transaction, *Block, Client, error) {
 func newMockClient() (Client, error) {
 	ethereumSym.MockClientNew(int32(testClientID))
 
-	client, err := New(testRPCURL)
+	client, err := New(testRPCURL, rpc.Header("Authorization", "token"))
 	if err != nil {
 		return 0, err
 	}

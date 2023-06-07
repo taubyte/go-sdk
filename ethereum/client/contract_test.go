@@ -6,7 +6,6 @@ import (
 	"math/rand"
 	"os"
 	"testing"
-	"unsafe"
 
 	ethereumSym "github.com/taubyte/go-sdk-symbols/ethereum/client"
 	"github.com/taubyte/go-sdk/errno"
@@ -23,7 +22,10 @@ func TestGetContract(t *testing.T) {
 	err = ethereumSym.MockNewBoundContract(testContract, testContractID, false, false)
 	assert.NilError(t, err)
 
-	contract, err := client.getContract(testAddress, testContractID, testContractMethodSize)
+	contract, err := client.getContract(testAddress, testContractID, testContractMethodSize, testContractEventsSize)
+	assert.NilError(t, err)
+
+	_, err = client.getContract(testAddress, testContractID, 0, testContractEventsSize)
 	assert.NilError(t, err)
 
 	if contract.id != testContractID {
@@ -34,7 +36,7 @@ func TestGetContract(t *testing.T) {
 	err = ethereumSym.MockNewBoundContract(testContract, testContractID, false, true)
 	assert.NilError(t, err)
 
-	_, err = client.getContract(testAddress, testContractID, testContractMethodSize)
+	_, err = client.getContract(testAddress, testContractID, testContractMethodSize, testContractEventsSize)
 	if err == nil {
 		t.Error("Expected error")
 		return
@@ -43,7 +45,7 @@ func TestGetContract(t *testing.T) {
 	err = ethereumSym.MockNewBoundContract(testContract, testContractID, true, false)
 	assert.NilError(t, err)
 
-	_, err = client.getContract(testAddress, testContractID, testContractMethodSize)
+	_, err = client.getContract(testAddress, testContractID, testContractMethodSize, testContractEventsSize)
 	if err == nil {
 		t.Error("Expected error")
 		return
@@ -53,7 +55,7 @@ func TestGetContract(t *testing.T) {
 	err = ethereumSym.MockNewBoundContract(testContract, testContractID, false, false)
 	assert.NilError(t, err)
 
-	_, err = client.getContract(testAddress, testContractID, testContractMethodSize)
+	_, err = client.getContract(testAddress, testContractID, testContractMethodSize, testContractEventsSize)
 	if err == nil {
 		t.Error("Expected error")
 		return
@@ -67,7 +69,7 @@ func TestGetContract(t *testing.T) {
 	err = ethereumSym.MockNewBoundContract(testContract, testContractID, false, false)
 	assert.NilError(t, err)
 
-	_, err = client.getContract(testAddress, testContractID, testContractMethodSize)
+	_, err = client.getContract(testAddress, testContractID, testContractMethodSize, testContractEventsSize)
 	if err == nil {
 		t.Error("Expected error")
 		return
@@ -81,7 +83,7 @@ func TestGetContract(t *testing.T) {
 	err = ethereumSym.MockNewBoundContract(testContract, testContractID, false, false)
 	assert.NilError(t, err)
 
-	_, err = client.getContract(testAddress, testContractID, testContractMethodSize)
+	_, err = client.getContract(testAddress, testContractID, testContractMethodSize, testContractEventsSize)
 	if err == nil {
 		t.Error("Expected error")
 		return
@@ -91,7 +93,7 @@ func TestGetContract(t *testing.T) {
 	err = ethereumSym.MockNewBoundContract(testContract, testContractID, false, false)
 	assert.NilError(t, err)
 
-	_, err = client.getContract(testAddress, testContractID, testContractMethodSize)
+	_, err = client.getContract(testAddress, testContractID, testContractMethodSize, testContractEventsSize)
 	if err == nil {
 		t.Error("Expected error")
 		return
@@ -101,29 +103,17 @@ func TestGetContract(t *testing.T) {
 	err = ethereumSym.MockNewBoundContract(testContract, testContractID, false, false)
 	assert.NilError(t, err)
 
-	_, err = client.getContract(testAddress, testContractID, testContractMethodSize)
+	_, err = client.getContract(testAddress, testContractID, testContractMethodSize, testContractEventsSize)
 	if err == nil {
 		t.Error("Expected error")
 		return
 	}
 
-	ethereumSym.EthNewContract = func(clientId, contractId uint32, methodsPtr *byte) (error errno.Error) {
-		d := unsafe.Slice(methodsPtr, 22)
-		copy(d, []byte("Hello, world"))
-		return 0
-	}
-
-	_, err = client.getContract(testAddress, testContractID, 11)
-	if err == nil {
-		t.Error("Expected error")
-		return
-	}
-
-	ethereumSym.EthNewContract = func(clientId, contractId uint32, methodsPtr *byte) (error errno.Error) {
+	ethereumSym.EthNewContract = func(clientId, contractId uint32, methodsPtr, eventsPtr *byte) (error errno.Error) {
 		return 1
 	}
 
-	_, err = client.getContract(testAddress, testContractID, testContractMethodSize)
+	_, err = client.getContract(testAddress, testContractID, testContractMethodSize, testContractEventsSize)
 	if err == nil {
 		t.Error("Expected error")
 		return
