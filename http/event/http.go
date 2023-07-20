@@ -38,6 +38,10 @@ func (e Event) Write(data []byte) (int, error) {
 	return int(n), nil
 }
 
+func (e Event) Flush() { //implements http.Flusher
+	httpEventSym.EventHttpFlush(uint32(e))
+}
+
 func (e Event) Return(code int) error {
 	err := httpEventSym.EventHttpRetCode(uint32(e), uint32(code))
 	if err != 0 {
