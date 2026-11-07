@@ -11,7 +11,7 @@ import (
 func TestHeaderSet(t *testing.T) {
 	var headers EventHeaders
 
-	httpEventSym.EventHttpHeaderAdd = func(eventId uint32, key, val string) (error errno.Error) {
+	httpEventSym.EventHttpHeaderSet = func(eventId uint32, key, val string) (error errno.Error) {
 		return 0
 	}
 
@@ -27,7 +27,7 @@ func TestHeaderSet(t *testing.T) {
 		return
 	}
 
-	httpEventSym.EventHttpHeaderAdd = func(eventId uint32, key, val string) (error errno.Error) {
+	httpEventSym.EventHttpHeaderSet = func(eventId uint32, key, val string) (error errno.Error) {
 		return errno.ErrorHeaderNotFound
 	}
 
@@ -133,5 +133,26 @@ func TestHeaderList(t *testing.T) {
 	if err == nil {
 		t.Error("Expected error")
 		return
+	}
+}
+
+func TestHeaderAddAndDelete(t *testing.T) {
+	var headers EventHeaders
+	headers2 := map[string]string{}
+	httpEventSym.MockHeaders(0, headers2)
+	if err := headers.Add("a", "1"); err != nil || headers2["a"] != "1" {
+		t.Fatal(err, headers2)
+	}
+	if err := headers.Set("a", "2"); err != nil || headers2["a"] != "2" {
+		t.Fatal(err, headers2)
+	}
+	if err := headers.Delete("a"); err != nil {
+		t.Fatal(err)
+	}
+	if _, ok := headers2["a"]; ok {
+		t.Fatal("header not deleted")
+	}
+	if headers.Delete("") == nil || headers.Add("", "x") == nil {
+		t.Fatal("empty key must fail")
 	}
 }
