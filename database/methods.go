@@ -1,11 +1,16 @@
 package database
 
 import (
+	"errors"
 	"fmt"
 
 	databaseSym "github.com/taubyte/go-sdk-symbols/database"
+	"github.com/taubyte/go-sdk/errno"
 	"github.com/taubyte/go-sdk/utils/codec"
 )
+
+// ErrNotFound is returned (wrapped) by Get when the key does not exist.
+var ErrNotFound = errors.New("key not found")
 
 // Put writes the key and data into the database.
 // Returns an error
@@ -28,6 +33,9 @@ func (d Database) Put(key string, data []byte) error {
 func (d Database) Get(key string) ([]byte, error) {
 	var size uint32
 	err := databaseSym.DatabaseGetSize(uint32(d), key, &size)
+	if err == errno.ErrorDatabaseKeyNotFound {
+		return nil, fmt.Errorf("Database get %q: %w", key, ErrNotFound)
+	}
 	if err != 0 {
 		return nil, fmt.Errorf("Database get size failed with: %s", err)
 	}
