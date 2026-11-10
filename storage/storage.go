@@ -8,7 +8,9 @@ import (
 
 	"github.com/ipfs/go-cid"
 	storageSym "github.com/taubyte/go-sdk-symbols/storage"
+	"github.com/taubyte/go-sdk/errno"
 	"github.com/taubyte/go-sdk/utils/codec"
+	"github.com/taubyte/go-sdk/utils/sized"
 )
 
 // Get returns the storage with given name.
@@ -26,17 +28,16 @@ func Get(storageName string) (Storage, error) {
 // ListFiles looks up all saved files in the given storage.
 // Returns an array of all Files found in the storage and an error.
 func (s Storage) ListFiles() ([]File, error) {
-	var size uint32
 	var files []File
-	err := storageSym.StorageListFilesSize(uint32(s), &size)
-	if err != 0 {
-		return nil, fmt.Errorf("Failed storage list file size with %v", err)
+	buf, sizeErr, dataErr := sized.Read(
+		func(size *uint32) errno.Error { return storageSym.StorageListFilesSize(uint32(s), size) },
+		func(data *byte) errno.Error { return storageSym.StorageListFiles(uint32(s), data) },
+	)
+	if sizeErr != 0 {
+		return nil, fmt.Errorf("Failed storage list file size with %v", sizeErr)
 	}
-
-	var buf = make([]byte, size)
-	err = storageSym.StorageListFiles(uint32(s), &buf[0])
-	if err != 0 {
-		return nil, fmt.Errorf("Failed storage list files with %v", err)
+	if dataErr != 0 {
+		return nil, fmt.Errorf("Failed storage list files with %v", dataErr)
 	}
 
 	values := strings.Split(string(buf), "/")
@@ -81,19 +82,18 @@ func (s Storage) File(fileName string) *File {
 // Remaining capacity loops through to given storage and calculates how much space left is available.
 // Returns the remaining space available and an error.
 func (s Storage) RemainingCapacity() (int, error) {
+	_used, sizeErr, dataErr := sized.Read(
+		func(size *uint32) errno.Error { return storageSym.StorageUsedSize(uint32(s), size) },
+		func(data *byte) errno.Error { return storageSym.StorageUsed(uint32(s), data) },
+	)
+	if sizeErr != 0 {
+		return 0, fmt.Errorf("Getting used storage failed with: %s", sizeErr)
+	}
+	if dataErr != 0 {
+		return 0, fmt.Errorf("Getting used storage failed with: %s", dataErr)
+	}
+
 	var size uint32
-	if err := storageSym.StorageUsedSize(uint32(s), &size); err != 0 {
-		return 0, fmt.Errorf("Getting used storage failed with: %s", err)
-	}
-
-	var _used []byte
-	if size != 0 {
-		_used = make([]byte, size)
-		if err := storageSym.StorageUsed(uint32(s), &_used[0]); err != 0 {
-			return 0, fmt.Errorf("Getting used storage failed with: %s", err)
-		}
-	}
-
 	if err := storageSym.StorageCapacitySize(uint32(s), &size); err != 0 {
 		return 0, fmt.Errorf("Getting total capacity failed with: %s", err)
 	}
@@ -206,15 +206,15 @@ func (f *File) DeleteAllVersions() error {
 // ListVersions uses the current file and looks up all version of the file.
 // Returns []string of all the versions and an error
 func (f *File) Versions() ([]string, error) {
-	var size uint32
-	err := storageSym.StorageListVersionsSize(uint32(f.storage), f.name, &size)
-	if err != 0 || size == 0 {
-		return nil, fmt.Errorf("List versions for file: `%s` failed with: %s", f.name, err)
+	versions, sizeErr, dataErr := sized.Read(
+		func(size *uint32) errno.Error { return storageSym.StorageListVersionsSize(uint32(f.storage), f.name, size) },
+		func(data *byte) errno.Error { return storageSym.StorageListVersions(uint32(f.storage), f.name, data) },
+	)
+	if dataErr != 0 {
+		return nil, fmt.Errorf("List versions for file: `%s` failed with: %s", f.name, dataErr)
 	}
-	versions := make([]byte, size)
-	err = storageSym.StorageListVersions(uint32(f.storage), f.name, &versions[0])
-	if err != 0 || size == 0 {
-		return nil, fmt.Errorf("List versions for file: `%s` failed with: %s", f.name, err)
+	if sizeErr != 0 || len(versions) == 0 {
+		return nil, fmt.Errorf("List versions for file: `%s` failed with: %s", f.name, sizeErr)
 	}
 
 	var conversion []string

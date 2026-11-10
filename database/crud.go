@@ -6,7 +6,9 @@ import (
 	"fmt"
 
 	databaseSym "github.com/taubyte/go-sdk-symbols/database"
+	"github.com/taubyte/go-sdk/errno"
 	"github.com/taubyte/go-sdk/utils/codec"
+	"github.com/taubyte/go-sdk/utils/sized"
 )
 
 // Entry is a key with its value.
@@ -66,18 +68,17 @@ func (b Batch) Commit() error {
 
 // Entries returns every key under prefix with its value.
 func (d Database) Entries(prefix string) ([]Entry, error) {
-	var size uint32
-	if err := databaseSym.DatabaseListEntriesSize(uint32(d), prefix, &size); err != 0 {
-		return nil, fmt.Errorf("Database entries size failed with: %s", err)
+	data, sizeErr, dataErr := sized.Read(
+		func(size *uint32) errno.Error { return databaseSym.DatabaseListEntriesSize(uint32(d), prefix, size) },
+		func(data *byte) errno.Error { return databaseSym.DatabaseListEntries(uint32(d), prefix, data) },
+	)
+	if sizeErr != 0 {
+		return nil, fmt.Errorf("Database entries size failed with: %s", sizeErr)
+	}
+	if dataErr != 0 {
+		return nil, fmt.Errorf("Database Entries failed with: %s", dataErr)
 	}
 	entries := []Entry{}
-	if size == 0 {
-		return entries, nil
-	}
-	data := make([]byte, size)
-	if err := databaseSym.DatabaseListEntries(uint32(d), prefix, &data[0]); err != 0 {
-		return nil, fmt.Errorf("Database Entries failed with: %s", err)
-	}
 	// each entry: key, 0x00, value length (uint32 LE), value
 	for i := 0; i < len(data); {
 		end := i
@@ -108,16 +109,18 @@ func decodeKeys(data []byte) ([]string, error) {
 
 // Match returns the keys under prefix that match the regular expression pattern.
 func (d Database) Match(prefix, pattern string) ([]string, error) {
-	var size uint32
-	if err := databaseSym.DatabaseListMatchSize(uint32(d), prefix, pattern, &size); err != 0 {
-		return nil, fmt.Errorf("Database match size failed with: %s", err)
+	data, sizeErr, dataErr := sized.Read(
+		func(size *uint32) errno.Error { return databaseSym.DatabaseListMatchSize(uint32(d), prefix, pattern, size) },
+		func(data *byte) errno.Error { return databaseSym.DatabaseListMatch(uint32(d), prefix, pattern, data) },
+	)
+	if sizeErr != 0 {
+		return nil, fmt.Errorf("Database match size failed with: %s", sizeErr)
 	}
-	if size == 0 {
+	if dataErr != 0 {
+		return nil, fmt.Errorf("Database Match failed with: %s", dataErr)
+	}
+	if len(data) == 0 {
 		return []string{}, nil
-	}
-	data := make([]byte, size)
-	if err := databaseSym.DatabaseListMatch(uint32(d), prefix, pattern, &data[0]); err != 0 {
-		return nil, fmt.Errorf("Database Match failed with: %s", err)
 	}
 	return decodeKeys(data)
 }
@@ -125,16 +128,18 @@ func (d Database) Match(prefix, pattern string) ([]string, error) {
 // ListPage returns at most limit keys under prefix, in order, after cursor
 // (exclusive; "" starts at the first key). Pass the last key as the next cursor.
 func (d Database) ListPage(prefix, cursor string, limit uint32) ([]string, error) {
-	var size uint32
-	if err := databaseSym.DatabaseListPageSize(uint32(d), prefix, cursor, limit, &size); err != 0 {
-		return nil, fmt.Errorf("Database page size failed with: %s", err)
+	data, sizeErr, dataErr := sized.Read(
+		func(size *uint32) errno.Error { return databaseSym.DatabaseListPageSize(uint32(d), prefix, cursor, limit, size) },
+		func(data *byte) errno.Error { return databaseSym.DatabaseListPage(uint32(d), prefix, cursor, limit, data) },
+	)
+	if sizeErr != 0 {
+		return nil, fmt.Errorf("Database page size failed with: %s", sizeErr)
 	}
-	if size == 0 {
+	if dataErr != 0 {
+		return nil, fmt.Errorf("Database ListPage failed with: %s", dataErr)
+	}
+	if len(data) == 0 {
 		return []string{}, nil
-	}
-	data := make([]byte, size)
-	if err := databaseSym.DatabaseListPage(uint32(d), prefix, cursor, limit, &data[0]); err != 0 {
-		return nil, fmt.Errorf("Database ListPage failed with: %s", err)
 	}
 	return decodeKeys(data)
 }
