@@ -12,14 +12,41 @@ func (e Event) Headers() EventHeaders {
 	return EventHeaders(e)
 }
 
+// Set replaces every value of the response header key.
 func (e EventHeaders) Set(key, value string) error {
 	if len(key) == 0 {
 		return errors.New("Cannot set header with empty key")
 	}
 
-	err := httpEventSym.EventHttpHeaderAdd(uint32(e), key, value)
+	err := httpEventSym.EventHttpHeaderSet(uint32(e), key, value)
 	if err != 0 {
 		return fmt.Errorf("Setting header failed with: %s", err)
+	}
+	return nil
+}
+
+// Add appends a value to the response header key, keeping the ones already set.
+func (e EventHeaders) Add(key, value string) error {
+	if len(key) == 0 {
+		return errors.New("Cannot add header with empty key")
+	}
+
+	err := httpEventSym.EventHttpHeaderAdd(uint32(e), key, value)
+	if err != 0 {
+		return fmt.Errorf("Adding header failed with: %s", err)
+	}
+	return nil
+}
+
+// Delete removes the response header key.
+func (e EventHeaders) Delete(key string) error {
+	if len(key) == 0 {
+		return errors.New("Cannot delete header with empty key")
+	}
+
+	err := httpEventSym.EventHttpHeaderDel(uint32(e), key)
+	if err != 0 {
+		return fmt.Errorf("Deleting header failed with: %s", err)
 	}
 	return nil
 }
