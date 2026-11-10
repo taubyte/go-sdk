@@ -7,6 +7,7 @@ import (
 	databaseSym "github.com/taubyte/go-sdk-symbols/database"
 	"github.com/taubyte/go-sdk/errno"
 	"github.com/taubyte/go-sdk/utils/codec"
+	"github.com/taubyte/go-sdk/utils/sized"
 )
 
 // ErrNotFound is returned (wrapped) by Get when the key does not exist.
@@ -31,22 +32,18 @@ func (d Database) Put(key string, data []byte) error {
 // Get retrieves the given key from the database.
 // Returns the data of the key and an error.
 func (d Database) Get(key string) ([]byte, error) {
-	var size uint32
-	err := databaseSym.DatabaseGetSize(uint32(d), key, &size)
-	if err == errno.ErrorDatabaseKeyNotFound {
+	data, sizeErr, dataErr := sized.Read(
+		func(size *uint32) errno.Error { return databaseSym.DatabaseGetSize(uint32(d), key, size) },
+		func(data *byte) errno.Error { return databaseSym.DatabaseGet(uint32(d), key, data) },
+	)
+	if sizeErr == errno.ErrorDatabaseKeyNotFound {
 		return nil, fmt.Errorf("Database get %q: %w", key, ErrNotFound)
 	}
-	if err != 0 {
-		return nil, fmt.Errorf("Database get size failed with: %s", err)
+	if sizeErr != 0 {
+		return nil, fmt.Errorf("Database get size failed with: %s", sizeErr)
 	}
-	if size == 0 {
-		return []byte{}, nil
-	}
-
-	data := make([]byte, size)
-	err = databaseSym.DatabaseGet(uint32(d), key, &data[0])
-	if err != 0 {
-		return nil, fmt.Errorf("Database Get failed with: %s", err)
+	if dataErr != 0 {
+		return nil, fmt.Errorf("Database Get failed with: %s", dataErr)
 	}
 
 	return data, nil
@@ -77,19 +74,18 @@ func (d Database) Close() error {
 // List uses the prefix given to get a list of keys that use the prefix in the database
 // Returns all keys found and an error
 func (d Database) List(prefix string) ([]string, error) {
-	var size uint32
-	err := databaseSym.DatabaseListSize(uint32(d), prefix, &size)
-	if err != 0 {
-		return nil, fmt.Errorf("Database get list size failed with: %s", err)
+	data, sizeErr, dataErr := sized.Read(
+		func(size *uint32) errno.Error { return databaseSym.DatabaseListSize(uint32(d), prefix, size) },
+		func(data *byte) errno.Error { return databaseSym.DatabaseList(uint32(d), prefix, data) },
+	)
+	if sizeErr != 0 {
+		return nil, fmt.Errorf("Database get list size failed with: %s", sizeErr)
 	}
-	if size == 0 {
+	if dataErr != 0 {
+		return nil, fmt.Errorf("Database List failed with: %s", dataErr)
+	}
+	if len(data) == 0 {
 		return []string{}, nil
-	}
-
-	data := make([]byte, size)
-	err = databaseSym.DatabaseList(uint32(d), prefix, &data[0])
-	if err != 0 {
-		return nil, fmt.Errorf("Database List failed with: %s", err)
 	}
 
 	keys := make([]string, 0)
